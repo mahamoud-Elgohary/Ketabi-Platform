@@ -1,0 +1,420 @@
+.publisher-orders-container {
+    min-height: 100vh;
+    padding: 2rem;
+    background: linear-gradient(135deg, #fff8dc 0%, #f5f5dc 100%);
+}
+
+.card {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+    border: 2px solid #daa520;
+}
+
+.page-title {
+    font-family: 'Georgia', serif;
+    color: #2c1810;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.loading-message {
+    text-align: center;
+    padding: 3rem;
+    color: #6b4423;
+    font-style: italic;
+}
+
+.alert {
+    padding: 0.875rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.alert-error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef5350;
+}
+
+.orders-section {
+    margin-top: 1.5rem;
+}
+
+.orders-summary {
+    margin-bottom: 1rem;
+    color: #6b4423;
+    font-size: 0.95rem;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid  #818181;
+}
+
+.orders-table thead {
+    background: linear-gradient(135deg, #8b4513, #6b4423);
+    color: white;
+}
+
+.orders-table th {
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #868686; /* row separator */
+    border-right: 1px solid #818181;  /* column separator */
+}
+
+.orders-table td {
+    text-align: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid  #818181;
+    color: #2c1810;
+    border-bottom: 1px solid  #818181; /* row separator */
+    border-right: 1px solid  #818181;  /* column separator */
+}
+
+.orders-table tbody tr:hover {
+    background-color: #fff8dc;
+}
+
+.order-number {
+    font-family: monospace;
+    font-weight: 600;
+    color: #8b4513;
+}
+
+.customer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.customer-name {
+    font-weight: 600;
+    color: #2c1810;
+}
+
+.customer-email {
+    font-size: 0.85rem;
+    color: #6b4423;
+}
+
+.book-name {
+    font-weight: 500;
+    color: #8b4513;
+}
+
+.book-name.clickable {
+  color: #1e88e5;            /* blue link color */
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.book-name.clickable:hover {
+  text-decoration: underline;
+  color: #1565c0;
+}
+
+.total-price {
+    font-weight: 600;
+    color: #2c1810;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-badge.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.status-processing {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.status-badge.status-shipped {
+    background-color: #d1ecf1;
+    color: #055160;
+}
+
+.status-badge.status-intransit {
+    background-color: #d1ecf1;
+    color: #055160;
+}
+
+.status-badge.status-delivered {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.status-returned {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+
+.status-badge.status-completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.status-failed {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.status-badge.status-refunded {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.status-expired {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+
+
+.btn-update {
+    background-color: #daa520;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-update:hover {
+    background-color: #b8941c;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.page-btn {
+    background-color: #daa520;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: #b8941c;
+}
+
+.page-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.page-info {
+    color: #6b4423;
+    font-weight: 500;
+}
+
+.no-orders {
+    text-align: center;
+    padding: 3rem;
+    color: #6b4423;
+    font-style: italic;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 15px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border: 2px solid #daa520;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #daa520;
+    padding-bottom: 1rem;
+}
+
+.modal-header h3 {
+    font-family: 'Georgia', serif;
+    color: #2c1810;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #6b4423;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background-color: #f5f5f5;
+    color: #2c1810;
+}
+
+.update-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #8b4513;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    padding: 0.75rem;
+    border: 2px solid #daa520;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #2c1810;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #8b4513;
+    box-shadow: 0 0 0 0.2rem rgba(218, 165, 32, 0.25);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn-cancel,
+.btn-submit {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel {
+    background-color: #f5f5f5;
+    color: #6b4423;
+}
+
+.btn-cancel:hover {
+    background-color: #e0e0e0;
+}
+
+.btn-submit {
+    background-color: #daa520;
+    color: white;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background-color: #b8941c;
+}
+
+.btn-submit:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .publisher-orders-container {
+        padding: 1rem;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    .table-container {
+        overflow-x: scroll;
+    }
+
+    .orders-table {
+        font-size: 0.85rem;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+    }
+}
+

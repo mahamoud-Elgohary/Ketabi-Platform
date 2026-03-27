@@ -1,0 +1,22 @@
+<div class="split-container">
+  <div class="left-section">
+    <img src="/images/mainBg.jpg" alt="Background" />
+  </div>
+
+  <div class="right-section">
+    <div class="login-container">
+      <h1>Login</h1>
+
+      <!-- Just use the form component and pass data -->
+      <app-login-form
+        [isLoading]="isLoading"
+        [errorMessage]="errorMessage"
+        [showOtpInput]="showOtpInput"
+        (submitLogin)="onLoginSubmit($event)"
+        (submitOtp)="onOtpSubmit($event)"
+        (resendOtpClick)="onResendOtp()"
+        (socialLogin)="onSocialLogin($event)"
+      ></app-login-form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,485 @@
+<app-chat *ngIf="isUserLoggedIn && (role === 'user' || role === 'admin')"></app-chat>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fas fa-book-reader"></i>
+        <span *ngIf="!sidebarCollapsed">Ketabi Admin</span>
+      </div>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <i class="fas" [class.fa-bars]="sidebarCollapsed" [class.fa-times]="!sidebarCollapsed"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <i [ngClass]="['fas', item.icon]"></i>
+        <span *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+        <span class="badge" *ngIf="item.badge && !sidebarCollapsed">{{ item.badge }}</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span *ngIf="!sidebarCollapsed">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search..." />
+      </div>
+
+      <div class="top-bar-actions">
+        <div class="user-menu">
+          <span class="user-name">{{ userName }}</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <!-- Publisher Requests Container -->
+      <div class="requests-container">
+        <!-- Header Section -->
+        <div class="requests-header">
+          <div class="header-left">
+            <h1 class="page-title">
+              <i class="fas fa-user-tie"></i>
+              {{ isAdmin ? 'Publisher Requests' : 'My Publisher Request' }}
+            </h1>
+            <p class="page-subtitle">
+              {{
+                isAdmin
+                  ? 'Review and manage publisher applications'
+                  : 'Track your publisher application status'
+              }}
+            </p>
+          </div>
+          <div class="header-actions" *ngIf="!isAdmin && !hasActiveRequest">
+            <button class="btn btn-primary" (click)="openRequestModal()">
+              <i class="fas fa-paper-plane"></i>
+              Request Publisher Access
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats Cards (Admin Only) -->
+        <div class="stats-grid" *ngIf="isAdmin">
+          <div class="stat-card">
+            <div class="stat-icon total">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ totalRequests }}</div>
+              <div class="stat-label">Total Requests</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon pending">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ pendingRequests }}</div>
+              <div class="stat-label">Pending Review</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon approved">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ approvedRequests }}</div>
+              <div class="stat-label">Approved</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon rejected">
+              <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ rejectedRequests }}</div>
+              <div class="stat-label">Rejected</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User's Active Request Card (Non-Admin) -->
+        <div class="user-request-card" *ngIf="!isAdmin && hasActiveRequest && userRequest">
+          <div class="request-card-header">
+            <div class="request-status-badge" [ngClass]="'status-' + userRequest.status">
+              <i [ngClass]="getStatusIcon(userRequest.status)"></i>
+              {{ userRequest.status | titlecase }}
+            </div>
+            <div class="request-date">
+              <i class="fas fa-calendar"></i>
+              {{ formatDate(userRequest.createdAt) }}
+            </div>
+          </div>
+          <div class="request-card-body">
+            <h3 class="request-title">Publisher Access Request</h3>
+            <p class="request-message">{{ userRequest.message }}</p>
+
+            <div class="request-info">
+              <div class="info-item">
+                <i class="fas fa-clock"></i>
+                <span>Submitted {{ formatRelativeDate(userRequest.createdAt) }}</span>
+              </div>
+              <div class="info-item" *ngIf="userRequest.updatedAt !== userRequest.createdAt">
+                <i class="fas fa-history"></i>
+                <span>Updated {{ formatRelativeDate(userRequest.updatedAt) }}</span>
+              </div>
+            </div>
+
+            <div class="request-status-message" *ngIf="userRequest.status === 'pending'">
+              <i class="fas fa-info-circle"></i>
+              Your request is being reviewed by our team. You'll be notified once a decision is
+              made.
+            </div>
+            <div class="request-status-message approved" *ngIf="userRequest.status === 'approved'">
+              <i class="fas fa-check-circle"></i>
+              Congratulations! Your publisher request has been approved. You can now start
+              publishing books.
+            </div>
+            <div class="request-status-message rejected" *ngIf="userRequest.status === 'rejected'">
+              <i class="fas fa-times-circle"></i>
+              Your request was not approved at this time. You may submit a new request with
+              additional information.
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State (Non-Admin, No Request) -->
+        <div class="empty-request-state" *ngIf="!isAdmin && !hasActiveRequest && !loading">
+          <i class="fas fa-user-tie"></i>
+          <h3>Become a Publisher</h3>
+          <p>Apply to become a publisher and start selling your books on our platform</p>
+          <button class="btn btn-primary" (click)="openRequestModal()">
+            <i class="fas fa-paper-plane"></i>
+            Submit Publisher Request
+          </button>
+        </div>
+
+        <!-- Filters and Search Section (Admin Only) -->
+        <div class="filters-section" *ngIf="isAdmin">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              placeholder="Search by user name or message..."
+              [(ngModel)]="searchTerm"
+              (input)="onSearch()"
+            />
+          </div>
+
+          <div class="filters">
+            <div class="filter-group">
+              <label>Status</label>
+              <select [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Sort By</label>
+              <select [(ngModel)]="sortBy" (change)="onSortChange()">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            <button class="btn btn-outline" (click)="resetFilters()">
+              <i class="fas fa-redo"></i>
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Requests Table (Admin Only) -->
+        <div class="table-container" *ngIf="isAdmin">
+          <div *ngIf="loading" class="loading-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading requests...</p>
+          </div>
+
+          <div *ngIf="error" class="error-state">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>{{ error }}</p>
+            <button class="btn btn-primary" (click)="loadRequests()">Try Again</button>
+          </div>
+
+          <table *ngIf="!loading && !error" class="requests-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Message</th>
+                <th>Submitted</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let request of filteredRequests">
+                <td>
+                  <div class="user-info">
+                    <img
+                      [src]="request.user?.avatar || 'https://via.placeholder.com/40'"
+                      [alt]="request.user?.name"
+                      class="user-avatar"
+                    />
+                    <div class="user-details">
+                      <div class="user-name">{{ request.user?.name || 'Unknown User' }}</div>
+                      <div class="user-email">{{ request.user?.email || 'N/A' }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="message-cell">
+                    <p class="message-preview">{{ truncateMessage(request.message) }}</p>
+                  </div>
+                </td>
+                <td>
+                  <div class="date-cell">
+                    <i class="fas fa-calendar"></i>
+                    {{ formatDate(request.createdAt) }}
+                  </div>
+                </td>
+                <td>
+                  <span class="status-badge" [ngClass]="'status-' + request.status">
+                    <i [ngClass]="getStatusIcon(request.status)"></i>
+                    {{ request.status | titlecase }}
+                  </span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button
+                      class="btn-icon btn-view"
+                      (click)="viewRequest(request)"
+                      title="View Details"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button
+                      *ngIf="request.status === 'pending'"
+                      class="btn-icon btn-approve"
+                      (click)="approveRequest(request)"
+                      title="Approve"
+                    >
+                      <i class="fas fa-check"></i>
+                    </button>
+                    <button
+                      *ngIf="request.status === 'pending'"
+                      class="btn-icon btn-reject"
+                      (click)="rejectRequest(request)"
+                      title="Reject"
+                    >
+                      <i class="fas fa-times"></i>
+                    </button>
+                    <button
+                      class="btn-icon btn-delete"
+                      (click)="deleteRequest(request)"
+                      title="Delete"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Empty State -->
+          <div *ngIf="!loading && !error && filteredRequests.length === 0" class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>No Requests Found</h3>
+            <p>There are no publisher requests matching your criteria</p>
+          </div>
+        </div>
+
+        <!-- Pagination (Admin Only) -->
+        <div
+          class="pagination"
+          *ngIf="isAdmin && !loading && !error && filteredRequests.length > 0"
+        >
+          <div class="pagination-info">
+            Showing {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ Math.min(currentPage * pageSize, totalRequests) }} of {{ totalRequests }} requests
+          </div>
+          <div class="pagination-controls">
+            <button
+              class="btn-page"
+              [disabled]="currentPage === 1"
+              (click)="goToPage(currentPage - 1)"
+            >
+              <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <button
+              *ngFor="let page of getPageNumbers()"
+              class="btn-page"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+
+            <button
+              class="btn-page"
+              [disabled]="currentPage === totalPages"
+              (click)="goToPage(currentPage + 1)"
+            >
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <div class="page-size-selector">
+            <label>Show</label>
+            <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+              <option [value]="10">10</option>
+              <option [value]="25">25</option>
+              <option [value]="50">50</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Request Submission Modal (User) -->
+<div class="modal" *ngIf="showRequestModal" (click)="closeRequestModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <i class="fas fa-user-tie"></i>
+        Request Publisher Access
+      </h2>
+      <button class="close-btn" (click)="closeRequestModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Tell us why you want to become a publisher <span class="required">*</span></label>
+        <textarea
+          [(ngModel)]="requestMessage"
+          placeholder="Describe your publishing experience, the types of books you want to publish, and why you'd be a good fit..."
+          rows="6"
+        ></textarea>
+        <div class="character-count">{{ requestMessage.length }} / 500</div>
+      </div>
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i>
+        <p>
+          Your request will be reviewed by our team. We typically respond within 2-3 business days.
+        </p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeRequestModal()">Cancel</button>
+      <button
+        class="btn btn-primary"
+        (click)="submitRequest()"
+        [disabled]="requestMessage.length < 50"
+      >
+        <i class="fas fa-paper-plane"></i>
+        Submit Request
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Request Detail Modal (Admin) -->
+<div class="modal" *ngIf="showDetailModal" (click)="closeDetailModal()">
+  <div class="modal-content large" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <i class="fas fa-file-alt"></i>
+        Request Details
+      </h2>
+      <button class="close-btn" (click)="closeDetailModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body" *ngIf="selectedRequest">
+      <div class="detail-grid">
+        <div class="detail-section">
+          <h3>User Information</h3>
+          <div class="detail-item">
+            <label>Name:</label>
+            <span>{{ selectedRequest.user?.name || 'N/A' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Email:</label>
+            <span>{{ selectedRequest.user?.email || 'N/A' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Phone:</label>
+            <span>{{ selectedRequest.user?.phone || 'N/A' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Current Role:</label>
+            <span class="role-badge">{{ selectedRequest.user?.role || 'user' }}</span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Request Information</h3>
+          <div class="detail-item">
+            <label>Status:</label>
+            <span class="status-badge" [ngClass]="'status-' + selectedRequest.status">
+              <i [ngClass]="getStatusIcon(selectedRequest.status)"></i>
+              {{ selectedRequest.status | titlecase }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <label>Submitted:</label>
+            <span>{{ formatDate(selectedRequest.createdAt) }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Last Updated:</label>
+            <span>{{ formatDate(selectedRequest.updatedAt) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section full-width">
+        <h3>Message</h3>
+        <div class="message-content">
+          {{ selectedRequest.message }}
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeDetailModal()">Close</button>
+      <div class="action-group" *ngIf="selectedRequest?.status === 'pending'">
+        <button class="btn btn-danger" (click)="rejectRequest(selectedRequest!)">
+          <i class="fas fa-times"></i>
+          Reject
+        </button>
+        <button class="btn btn-success" (click)="approveRequest(selectedRequest!)">
+          <i class="fas fa-check"></i>
+          Approve
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

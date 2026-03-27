@@ -1,0 +1,198 @@
+<div class="profile-container">
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading profile...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="errorMessage && !isLoading && !isEditing">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="profile-content" *ngIf="!isLoading && profile">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-avatar-section">
+        <div class="avatar-container">
+          <img [src]="getAvatarUrl()" [alt]="profile.name" class="avatar-image" />
+          <div class="avatar-overlay" *ngIf="isEditing">
+            <i class="fas fa-camera"></i>
+          </div>
+        </div>
+        <h1 class="profile-name">{{ profile.name }}</h1>
+        <p class="profile-email">
+          <i class="fas fa-envelope"></i>
+          {{ profile.email }}
+        </p>
+        <span class="profile-role" [class.role-user]="profile.role === 'user'" 
+              [class.role-publisher]="profile.role === 'publisher'"
+              [class.role-admin]="profile.role === 'admin'">
+          <i class="fas fa-user-tag"></i>
+          {{ profile.role | titlecase }}
+        </span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="profile-actions" *ngIf="!isEditing">
+        <button class="btn btn-edit" (click)="startEditing()">
+          <i class="fas fa-edit"></i>
+          Edit Profile
+        </button>
+      </div>
+    </div>
+
+    <!-- Profile Information -->
+    <div class="profile-info-section">
+      <h2 class="section-title">
+        <i class="fas fa-user-circle"></i>
+        Personal Information
+      </h2>
+
+      <div class="info-grid">
+        <!-- View Mode -->
+        <div class="info-card" *ngIf="!isEditing">
+          <div class="info-item">
+            <div class="info-label">
+              <i class="fas fa-user"></i>
+              Full Name
+            </div>
+            <div class="info-value">{{ profile.name }}</div>
+          </div>
+
+          <div class="info-item" *ngIf="profile.phone">
+            <div class="info-label">
+              <i class="fas fa-phone"></i>
+              Phone Number
+            </div>
+            <div class="info-value">{{ profile.phone }}</div>
+          </div>
+
+          <div class="info-item" *ngIf="profile.gender">
+            <div class="info-label">
+              <i class="fas fa-venus-mars"></i>
+              Gender
+            </div>
+            <div class="info-value">{{ profile.gender | titlecase }}</div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">
+              <i class="fas fa-map-marker-alt"></i>
+              Address
+            </div>
+            <div class="info-value">{{ getDisplayAddress() }}</div>
+          </div>
+        </div>
+
+        <!-- Edit Mode -->
+        <div class="edit-form" *ngIf="isEditing">
+          <div class="form-group">
+            <label for="name">
+              <i class="fas fa-user"></i>
+              Full Name <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              [(ngModel)]="name"
+              class="form-control"
+              placeholder="Enter your full name"
+              required
+              minlength="2"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">
+              <i class="fas fa-phone"></i>
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              [(ngModel)]="phone"
+              class="form-control"
+              placeholder="Enter your phone number (e.g., +1234567890)"
+              pattern="^\+?[0-9]{8,15}$"
+            />
+            <small class="form-text">Format: 8-15 digits, optional + prefix</small>
+          </div>
+
+          <div class="form-group">
+            <label for="gender">
+              <i class="fas fa-venus-mars"></i>
+              Gender
+            </label>
+            <select id="gender" [(ngModel)]="gender" class="form-control">
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="street">
+              <i class="fas fa-map-marker-alt"></i>
+              Street Address
+            </label>
+            <input
+              type="text"
+              id="street"
+              [(ngModel)]="address.street"
+              class="form-control"
+              placeholder="Enter street address"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="city">
+              <i class="fas fa-city"></i>
+              City
+            </label>
+            <input
+              type="text"
+              id="city"
+              [(ngModel)]="address.city"
+              class="form-control"
+              placeholder="Enter city"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="avatar">
+              <i class="fas fa-image"></i>
+              Avatar URL
+            </label>
+            <input
+              type="url"
+              id="avatar"
+              [(ngModel)]="avatarUrl"
+              class="form-control"
+              placeholder="Enter avatar image URL"
+            />
+            <small class="form-text">Optional: URL to your profile picture</small>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button class="btn btn-cancel" (click)="cancelEditing()" [disabled]="isSaving">
+              <i class="fas fa-times"></i>
+              Cancel
+            </button>
+            <button class="btn btn-save" (click)="saveProfile()" [disabled]="isSaving">
+              <i class="fas fa-save" *ngIf="!isSaving"></i>
+              <span class="spinner-border spinner-border-sm" *ngIf="isSaving"></span>
+              {{ isSaving ? 'Saving...' : 'Save Changes' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

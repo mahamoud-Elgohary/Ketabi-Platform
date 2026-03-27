@@ -1,0 +1,136 @@
+/* ------------ PAGE CONTAINER ------------ */
+.payment-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  background: var(--bg-main);
+  min-height: 100vh;
+  color: var(--text-light);
+  border-radius: 5%;
+}
+
+.page-title {
+    text-align: center;
+  color: #2a1f17;
+  letter-spacing: 1px;
+}
+
+/* ------------ SUMMARY & PAYMENT PANELS ------------ */
+.summary-box,
+.payment-box {
+  background: var(--bg-panel);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-light);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* Titles */
+.section-title {
+  color: var(--accent-gold);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ------------ ITEMS LIST ------------ */
+.summary-item {
+  background: var(--bg-item);
+  border-radius: 12px;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  width: 175px;
+}
+
+.item-img {
+  width: 60px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.price-text {
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+/* ------------ DIVIDERS ------------ */
+.divider {
+  border-color: rgba(255,255,255,0.08);
+}
+
+/* ------------ COUPON BOX ------------ */
+.coupon-box {
+  background: var(--bg-box);
+  padding: 10px;
+  border-radius: 10px;
+  border-left: 4px solid var(--highlight-green);
+}
+
+/* ------------ GIFT BOX ------------ */
+.gift-box {
+  background: var(--bg-box);
+  border-left: 4px solid var(--accent-gold);
+}
+
+/* ------------ FINAL PRICE ------------ */
+.final-price {
+  color: var(--highlight-green-light);
+}
+
+/* ------------ SHIPPING BLOCK ------------ */
+.shipping-box {
+  background: var(--bg-box);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.shipping-block strong {
+  color: var(--accent-gold);
+}
+
+/* ------------ INPUTS ------------ */
+.input-field {
+  background: var(--bg-box) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  color: var(--text-light);
+}
+
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+
+.input-field:focus {
+  border-color: var(--highlight-green-light) !important;
+  box-shadow: 0 0 5px rgba(63,143,63,0.4) !important;
+}
+
+/* Labels */
+.field-label {
+  color: var(--accent-gold);
+  font-size: 0.9rem;
+}
+
+/* ------------ STRIPE ELEMENT ------------ */
+.stripe-element {
+  background: var(--bg-box);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text-light);
+  min-height: 48px;
+  border-radius: 10px;
+}
+
+/* ------------ PAY BUTTON ------------ */
+.pay-btn {
+  background: var(--highlight-green);
+  color: var(--text-light);
+  border: none;
+  transition: 0.25s;
+}
+
+.pay-btn:hover {
+  background: var(--highlight-green-light);
+  transform: translateY(-1px);
+}
+
+.pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

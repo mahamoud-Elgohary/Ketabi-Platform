@@ -1,0 +1,359 @@
+<!-- Registration Form -->
+@if(!showOtpInput) {
+<!-- Error Alert -->
+@if(errorMessage && validationErrors.length === 0) {
+<div class="alert alert-error">
+  <i class="fas fa-exclamation-triangle"></i>
+  {{ errorMessage }}
+  <button type="button" class="close-btn" (click)="clearError()">×</button>
+</div>
+}
+
+<!-- Error Alert - Validation Errors -->
+@if(validationErrors.length > 0) {
+<div class="alert alert-error validation-alert">
+  <div class="alert-header">
+    <i class="fas fa-exclamation-triangle"></i>
+    <strong>{{ errorMessage || 'Please fix the following errors:' }}</strong>
+    <button type="button" class="close-btn" (click)="clearError()">×</button>
+  </div>
+  <ul class="validation-errors-list">
+    @for(error of validationErrors; track $index) {
+    <li>{{ error }}</li>
+    }
+  </ul>
+</div>
+}
+
+<form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+  <!-- Full Name -->
+  <div class="form-group">
+    <label for="name">Full Name *</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      [(ngModel)]="userData.name"
+      placeholder="Enter your full name"
+      required
+      minlength="2"
+      #nameInput="ngModel"
+      [class.input-error]="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+    />
+    @if(nameInput.invalid && (nameInput.dirty || nameInput.touched)) {
+    @if(nameInput.errors?.['required']) {
+    <div class="error-message">Full name is required</div>
+    } @if(nameInput.errors?.['minlength'] && !nameInput.errors?.['required']) {
+    <div class="error-message">Name must be at least 2 characters</div>
+    } }
+  </div>
+
+  <!-- Email Address -->
+  <div class="form-group">
+    <label for="email">Email Address *</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      [(ngModel)]="userData.email"
+      placeholder="Enter your email"
+      email
+      required
+      #emailInput="ngModel"
+      [class.input-error]="emailInput.invalid && (emailInput.dirty || emailInput.touched)"
+    />
+    @if(emailInput.invalid && (emailInput.dirty || emailInput.touched)) {
+    <div class="error-messages">
+      @if(emailInput.errors?.['required']) {
+      <div class="error-message">Email is required</div>
+      } @if(emailInput.errors?.['email'] && !emailInput.errors?.['required']) {
+      <div class="error-message">Please enter a valid email address</div>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Phone Number -->
+  <div class="form-group">
+    <label for="phone">Phone Number *</label>
+    <input
+      type="tel"
+      id="phone"
+      name="phone"
+      [(ngModel)]="userData.phone"
+      placeholder="Enter your phone number"
+      required
+      pattern="^[\+]?[0-9]{10,15}$"
+      #phoneInput="ngModel"
+      [class.input-error]="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)"
+      inputmode="tel"
+    />
+    @if(phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)) {
+    <div class="error-messages">
+      @if(phoneInput.errors?.['required']) {
+      <div class="error-message">Phone number is required</div>
+      } @if(phoneInput.errors?.['pattern'] && !phoneInput.errors?.['required']) {
+      <div class="error-message">Please enter a valid phone number (10-15 digits)</div>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Gender -->
+  <div class="form-group">
+    <label>Gender *</label>
+    <div class="radio-group">
+      <label class="radio-label">
+        <input
+          type="radio"
+          name="gender"
+          value="male"
+          [(ngModel)]="userData.gender"
+          required
+          #genderInput="ngModel"
+        />
+        <span class="radio-text">Male</span>
+      </label>
+
+      <label class="radio-label">
+        <input type="radio" name="gender" value="female" [(ngModel)]="userData.gender" required />
+        <span class="radio-text">Female</span>
+      </label>
+    </div>
+    @if(genderInput.invalid && (genderInput.dirty || genderInput.touched)) {
+    <div class="error-messages">
+      <div class="error-message">Please select your gender</div>
+    </div>
+    }
+  </div>
+
+  <!-- Password -->
+  <div class="form-group">
+    <label for="password">Password *</label>
+    <div class="password-wrapper">
+      <input
+        [type]="showPassword ? 'text' : 'password'"
+        id="password"
+        name="password"
+        [(ngModel)]="userData.password"
+        placeholder="Create a password"
+        required
+        minlength="8"
+        #passwordInput="ngModel"
+        [class.input-error]="
+          passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)
+        "
+      />
+      <button
+        type="button"
+        class="toggle-password"
+        (click)="togglePassword()"
+        tabindex="-1"
+        [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+      >
+        <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+      </button>
+    </div>
+    @if(passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)) {
+    <div class="error-messages">
+      @if(passwordInput.errors?.['required']) {
+      <div class="error-message">Password is required</div>
+      } @if(passwordInput.errors?.['minlength'] && !passwordInput.errors?.['required']) {
+      <div class="error-message">Password must be at least 8 characters</div>
+      }
+    </div>
+    } @if(passwordInput.valid && passwordInput.dirty) {
+    <div class="password-strength">
+      <div class="strength-meter" [class]="getPasswordStrength()"></div>
+      <span class="strength-text">{{ getPasswordStrengthText() }}</span>
+    </div>
+    }
+  </div>
+
+  <!-- Confirm Password -->
+  <div class="form-group">
+    <label for="confirmPassword">Confirm Password *</label>
+    <div class="password-wrapper">
+      <input
+        [type]="showConfirmPassword ? 'text' : 'password'"
+        id="confirmPassword"
+        name="confirmPassword"
+        [(ngModel)]="userData.confirmPassword"
+        placeholder="Confirm your password"
+        required
+        #confirmPasswordInput="ngModel"
+        [class.input-error]="
+          (confirmPasswordInput.dirty || confirmPasswordInput.touched) &&
+          userData.password !== userData.confirmPassword &&
+          userData.confirmPassword.length > 0
+        "
+      />
+      <button
+        type="button"
+        class="toggle-password"
+        (click)="toggleConfirmPassword()"
+        tabindex="-1"
+        [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'"
+      >
+        <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+      </button>
+    </div>
+    @if( (confirmPasswordInput.dirty || confirmPasswordInput.touched) && userData.password !==
+    userData.confirmPassword && userData.confirmPassword.length > 0 ) {
+    <div class="error-messages">
+      <div class="error-message">Passwords do not match</div>
+    </div>
+    } @if( userData.password === userData.confirmPassword && userData.confirmPassword.length > 0 ) {
+    <div class="success-message">Passwords match</div>
+    }
+  </div>
+
+  <!-- Terms and Conditions -->
+  <div class="form-group checkbox-group">
+    <label class="checkbox-label">
+      <input
+        type="checkbox"
+        name="acceptTerms"
+        [(ngModel)]="acceptTerms"
+        required
+        #termsInput="ngModel"
+      />
+      <span>
+        I agree to the
+        <a href="/terms" target="_blank">Terms and Conditions</a>
+        and
+        <a href="/privacy" target="_blank">Privacy Policy</a>
+      </span>
+    </label>
+    @if(termsInput.invalid && (termsInput.dirty || termsInput.touched)) {
+    <div class="error-messages">
+      <div class="error-message">You must accept the terms and conditions</div>
+    </div>
+    }
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="submit-btn" [disabled]="signupForm.invalid || isLoading">
+    @if(isLoading) {
+    <span class="spinner"></span>
+    Creating Account... } @else { Sign Up }
+  </button>
+</form>
+
+<!-- Login Link -->
+<div class="signup-link">
+  Already have an account?
+  <a routerLink="/auth/login" class="link-primary"> Login </a>
+</div>
+
+<!-- Divider -->
+<div class="divider">
+  <span>OR</span>
+</div>
+
+<!-- Social Login Buttons -->
+
+<button
+  class="social-btn facebook-btn"
+  (click)="signInWithFacebook()"
+  [disabled]="isLoading"
+  type="button"
+>
+  <i class="fab fa-facebook-f"></i>
+  Continue with Facebook
+</button>
+<div class="text-center">
+
+  <asl-google-signin-button
+    type="standard"
+    size="large"
+    text="signin_with"
+    shape="rectangular"
+    logo_alignment="left"
+    [width]="100"
+    
+    (click)="signInWithGoogle()"
+  >
+  </asl-google-signin-button>
+</div>
+}
+<!-- OTP Verification Section -->
+@if(showOtpInput) {
+<div class="otp-container">
+  <!-- Back Button -->
+  <button type="button" class="back-btn" (click)="backToRegister($event)">
+    <i class="fas fa-arrow-left"></i>
+    Back
+  </button>
+
+  <div class="otp-header">
+    <div class="otp-icon">
+      <i class="fas fa-envelope-open-text"></i>
+    </div>
+    <h2>Verify Your Email</h2>
+    <p>
+      We've sent a 6-digit code to <strong>{{ userData.email }}</strong>
+    </p>
+    <p class="otp-instruction">Enter the code below to complete your registration</p>
+  </div>
+
+  <!-- Error Message -->
+  @if(errorMessage || otpError) {
+  <div class="alert alert-error">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ errorMessage || otpError }}
+  </div>
+  }
+
+  <!-- OTP Input Fields -->
+  <div class="otp-inputs">
+    @for(digit of otpDigits; track $index) {
+    <input
+      type="text"
+      maxlength="1"
+      class="otp-input"
+      [(ngModel)]="otpDigits[$index]"
+      (input)="onOtpInput($event, $index)"
+      (keydown)="onOtpKeyDown($event, $index)"
+      (paste)="onOtpPaste($event)"
+      [attr.aria-label]="'Digit ' + ($index + 1)"
+      #otp{{$index}}
+      pattern="[0-9]"
+      inputmode="numeric"
+    />
+    }
+  </div>
+
+  <!-- Submit OTP Button -->
+  <button
+    type="button"
+    class="submit-btn"
+    (click)="onOtpSubmit()"
+    [disabled]="!isOtpComplete() || isLoading"
+  >
+    @if(isLoading) {
+    <span class="spinner"></span>
+    Verifying... } @else { Verify & Continue }
+  </button>
+
+  <!-- Resend Code -->
+  <div class="resend-section">
+    @if(resendTimer > 0) {
+    <p class="resend-text">
+      Resend code in <strong>{{ resendTimer }}s</strong>
+    </p>
+    } @else {
+    <p class="resend-text">
+      Didn't receive the code?
+      <a href="#" (click)="onResendOtp($event)" class="resend-link"> Resend Code </a>
+    </p>
+    }
+  </div>
+
+  <!-- Help Text -->
+  <div class="help-text">
+    <i class="fas fa-info-circle"></i>
+    Check your spam folder if you don't see the email
+  </div>
+</div>
+}

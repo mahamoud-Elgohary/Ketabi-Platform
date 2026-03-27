@@ -1,0 +1,283 @@
+.book-card-wrapper {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+.book-card {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff8dc;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Image Wrapper */
+.book-image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.book-card:hover .card-img-top {
+  transform: scale(1.05);
+  filter: brightness(0.85);
+}
+
+/* Discount Badge */
+.card-discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #d9534f;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(217, 83, 79, 0.4);
+  z-index: 3;
+}
+
+/* Stock Badge */
+.card-stock-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+.card-stock-badge.in-stock {
+  background: #4caf50;
+  color: white;
+}
+
+.card-stock-badge.out-of-stock {
+  background: #f44336;
+  color: white;
+}
+
+/* Overlay Styling */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.book-card:hover .card-overlay {
+  opacity: 1;
+}
+
+.overlay-controls {
+  display: flex;
+  gap: 12px;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.overlay-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+}
+
+.overlay-link:hover {
+  transform: scale(1.1);
+  background: #ffffff;
+}
+
+.overlay-link i {
+  pointer-events: none;
+}
+
+.btn-cart {
+  background: #31291e;
+  color: #fff;
+}
+
+.btn-cart:hover:not(:disabled) {
+  background: #1a1410;
+  transform: scale(1.1);
+}
+
+.btn-cart:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-details {
+  background: #ffffff;
+  color: #333;
+}
+
+.btn-details:hover {
+  background: #f0f0f0;
+  transform: scale(1.1);
+}
+
+.btn-wishlist.active {
+  background: #d9534f;
+  color: white;
+}
+
+.btn-wishlist.active:hover {
+  background: #c9302c;
+  transform: scale(1.1);
+}
+
+/* Card Body */
+.card-body {
+  padding: 12px;
+  text-align: center;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-title {
+  color: #8b4513;
+  font-family: 'Georgia', serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.card-text {
+  color: #6b4423;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+/* Rating */
+.card-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+}
+
+.card-rating .stars {
+  display: flex;
+  gap: 2px;
+}
+
+.card-rating .stars i {
+  color: #ddd;
+  font-size: 0.85rem;
+}
+
+.card-rating .stars i.filled {
+  color: #f39c12;
+}
+
+.card-rating .rating-value {
+  font-weight: 600;
+  color: #31291e;
+  font-size: 0.85rem;
+}
+
+.card-rating .rating-count {
+  color: #6b4423;
+  font-size: 0.75rem;
+}
+
+/* Price and Rating */
+.card-footer-info {
+  margin-top: auto;
+}
+
+.price-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.price-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.original-price {
+  font-size: 0.85rem;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.final-price {
+  font-weight: 700;
+  color: #d9534f;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .book-card-wrapper {
+    max-width: 180px;
+  }
+
+  .card-img-top {
+    height: 220px;
+  }
+
+  .overlay-link {
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+  }
+}

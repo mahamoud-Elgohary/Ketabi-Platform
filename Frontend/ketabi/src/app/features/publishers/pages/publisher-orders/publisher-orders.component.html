@@ -1,0 +1,168 @@
+<div class="publisher-orders-container">
+    <div class="card">
+        <h2 class="page-title">Publisher Orders</h2>
+
+        <!-- Loading State -->
+        <div *ngIf="loading" class="loading-message">
+            <p>Loading orders...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="error && !loading" class="alert alert-error">
+            {{ error }}
+        </div>
+
+        <!-- Orders Table -->
+        <div *ngIf="!loading && !error && orders.length > 0" class="orders-section">
+            <div class="orders-summary">
+                <p>Total Orders: <strong>{{ total }}</strong></p>
+            </div>
+
+            <div class="table-container">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Book</th>
+                            <th>Edition</th>
+                            <th>Quantity</th>
+                            <th>Delivery Status</th>
+                            <th>Payment Status</th>
+                            <th>Shipping</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <ng-container *ngFor="let order of orders">
+                            <tr *ngFor="let item of order.items; let i = index">
+
+                                <!-- Order Number -->
+                                <td class="order-number">
+                                    {{ order._id.slice(-8) }}
+                                </td>
+
+                                <!-- Customer Info -->
+                                <td>
+                                    <div class="customer-info">
+                                        <div class="customer-name">Name: {{ order.name }}</div>
+                                        <div class="customer-email">Email: {{ order.email }}</div>
+                                    </div>
+                                </td>
+
+                                <!-- Book -->
+                                <td class="book-name clickable" (click)="goToBookDetails(item)">
+                                    {{ getBookName(item) }}
+                                </td>
+
+                                <td class="book-name">
+                                    {{ getEditionName(item) }}
+                                </td>
+
+                                <!-- Quantity -->
+                                <td>{{ item.quantity }}</td>
+
+                                <!-- Delivery Status -->
+                                <td>
+                                    <span class="status-badge" [class]="getStatusClass(item.deliveryStatus)">
+                                        {{ item.deliveryStatus }}
+                                    </span>
+                                </td>
+
+                                <!-- Payment Status -->
+                                <td>
+                                    <span class="status-badge" [class]="getStatusClass(item.paymentStatus)">
+                                        {{ item.paymentStatus }}
+                                    </span>
+                                </td>
+
+                                <!-- Shipping Info -->
+                                <td class="shipping-info">
+                                    <ng-container *ngIf="order.shippingAddress; else noShipping">
+                                        <div>Street: {{ order.shippingAddress.street }}</div>
+                                        <div>City: {{ order.shippingAddress.city }}</div>
+                                        <div>phone: {{ order.shippingAddress.phoneNumber }}</div>
+                                    </ng-container>
+
+                                    <ng-template #noShipping>
+                                        <span class="no-shipping">—</span>
+                                    </ng-template>
+                                </td>
+
+                                <!-- Total (price * qty * discount%) -->
+                                <td class="total-price">
+                                    {{ item.price * item.quantity * (1 - item.discount / 100) | currency: 'EGP' }}
+                                </td>
+
+                                <!-- Actions -->
+                                <td class="actions">
+                                    <button class="btn-update" (click)="openUpdateModal(order, i)">
+                                        Update
+                                    </button>
+                                </td>
+
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <!-- Pagination -->
+            <div *ngIf="totalPages > 1" class="pagination">
+                <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+                    Previous
+                </button>
+                <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+                <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
+                    Next
+                </button>
+            </div>
+        </div>
+
+        <!-- No Orders -->
+        <div *ngIf="!loading && !error && orders.length === 0" class="no-orders">
+            <p>No orders found.</p>
+        </div>
+    </div>
+
+    <!-- Update Modal -->
+    <div *ngIf="showUpdateModal" class="modal-overlay" (click)="closeUpdateModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>Update Order Status</h3>
+                <button class="close-btn" (click)="closeUpdateModal()">&times;</button>
+            </div>
+
+            <form [formGroup]="updateForm" (ngSubmit)="submitUpdate()" class="update-form">
+                <div class="form-group">
+                    <label for="deliveryStatus" class="form-label">Delivery Status</label>
+                    <select id="deliveryStatus" formControlName="deliveryStatus" class="form-control">
+                        <option value="">-- Keep Current --</option>
+                        <option *ngFor="let status of deliveryStatuses" [value]="status">{{ status }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentStatus" class="form-label">Payment Status</label>
+                    <select id="paymentStatus" formControlName="paymentStatus" class="form-control">
+                        <option value="">-- Keep Current --</option>
+                        <option *ngFor="let status of paymentStatuses" [value]="status">{{ status }}</option>
+                    </select>
+                </div>
+
+                <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" (click)="closeUpdateModal()">Cancel</button>
+                    <button type="submit" class="btn-submit" [disabled]="updating || updateForm.invalid">
+                        <span *ngIf="!updating">Update</span>
+                        <span *ngIf="updating">Updating...</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

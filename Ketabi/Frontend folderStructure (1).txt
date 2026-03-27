@@ -1,0 +1,142 @@
+src/
+├── app/
+│   ├── core/                          # Core functionality
+│   │   ├── guards/
+│   │   │   ├── auth.guard.ts
+│   │   │   └── role.guard.ts
+│   │   ├── interceptors/
+│   │   │   ├── auth.interceptor.ts
+│   │   │   ├── error.interceptor.ts
+│   │   │   └── loading.interceptor.ts
+│   │   ├── services/
+│   │   │   ├── auth.service.ts
+│   │   │   ├── api.service.ts
+│   │   │   └── storage.service.ts
+│   │   ├── models/
+│   │   │   └── user.model.ts
+│   │   └── constants/
+│   │       └── api-endpoints.ts
+│   │
+│   ├── shared/                        # Reusable standalone components
+│   │   ├── components/
+│   │   │   ├── header/
+│   │   │   │   ├── header.component.ts
+│   │   │   │   ├── header.component.html
+│   │   │   │   ├── header.component.scss
+│   │   │   │   └── header.component.spec.ts
+│   │   │   ├── footer/
+│   │   │   │   ├── footer.component.ts
+│   │   │   │   ├── footer.component.html
+│   │   │   │   └── footer.component.scss
+│   │   │   ├── sidebar/
+│   │   │   │   ├── sidebar.component.ts
+│   │   │   │   ├── sidebar.component.html
+│   │   │   │   └── sidebar.component.scss
+│   │   │   └── modal/
+│   │   │       ├── modal.component.ts
+│   │   │       ├── modal.component.html
+│   │   │       └── modal.component.scss
+│   │   ├── directives/
+│   │   │   ├── highlight.directive.ts
+│   │   │   └── tooltip.directive.ts
+│   │   ├── pipes/
+│   │   │   ├── truncate.pipe.ts
+│   │   │   └── safe-html.pipe.ts
+│   │   └── models/
+│   │
+│   ├── features/                      # Feature standalone components
+│   │   ├── dashboard/
+│   │   │   ├── components/
+│   │   │   │   ├── stats-card/
+│   │   │   │   │   ├── stats-card.component.ts
+│   │   │   │   │   ├── stats-card.component.html
+│   │   │   │   │   └── stats-card.component.scss
+│   │   │   │   └── chart/
+│   │   │   │       ├── chart.component.ts
+│   │   │   │       ├── chart.component.html
+│   │   │   │       └── chart.component.scss
+│   │   │   ├── pages/
+│   │   │   │   └── dashboard-page/
+│   │   │   │       ├── dashboard-page.component.ts
+│   │   │   │       ├── dashboard-page.component.html
+│   │   │   │       └── dashboard-page.component.scss
+│   │   │   ├── services/
+│   │   │   │   └── dashboard.service.ts
+│   │   │   ├── models/
+│   │   │   └── dashboard.routes.ts
+│   │   │
+│   │   ├── products/
+│   │   │   ├── components/
+│   │   │   │   ├── product-list/
+│   │   │   │   │   ├── product-list.component.ts
+│   │   │   │   │   ├── product-list.component.html
+│   │   │   │   │   └── product-list.component.scss
+│   │   │   │   ├── product-card/
+│   │   │   │   │   ├── product-card.component.ts
+│   │   │   │   │   ├── product-card.component.html
+│   │   │   │   │   └── product-card.component.scss
+│   │   │   │   └── product-filter/
+│   │   │   │       ├── product-filter.component.ts
+│   │   │   │       ├── product-filter.component.html
+│   │   │   │       └── product-filter.component.scss
+│   │   │   ├── pages/
+│   │   │   │   ├── product-list-page/
+│   │   │   │   │   ├── product-list-page.component.ts
+│   │   │   │   │   ├── product-list-page.component.html
+│   │   │   │   │   └── product-list-page.component.scss
+│   │   │   │   ├── product-detail-page/
+│   │   │   │   │   ├── product-detail-page.component.ts
+│   │   │   │   │   ├── product-detail-page.component.html
+│   │   │   │   │   └── product-detail-page.component.scss
+│   │   │   │   └── product-edit-page/
+│   │   │   │       ├── product-edit-page.component.ts
+│   │   │   │       ├── product-edit-page.component.html
+│   │   │   │       └── product-edit-page.component.scss
+│   │   │   ├── services/
+│   │   │   │   └── product.service.ts
+│   │   │   ├── models/
+│   │   │   │   └── product.model.ts
+│   │   │   └── products.routes.ts
+│   │   │
+│   │   └── users/
+│   │       ├── components/
+│   │       ├── pages/
+│   │       ├── services/
+│   │       ├── models/
+│   │       └── users.routes.ts
+│   │
+│   ├── layout/                        # Layout standalone components
+│   │   ├── main-layout/
+│   │   │   ├── main-layout.component.ts
+│   │   │   ├── main-layout.component.html
+│   │   │   └── main-layout.component.scss
+│   │   └── auth-layout/
+│   │       ├── auth-layout.component.ts
+│   │       ├── auth-layout.component.html
+│   │       └── auth-layout.component.scss
+│   │
+│   ├── app.routes.ts                 # Main routes file
+│   ├── app.config.ts                 # Application configuration
+│   ├── app.component.ts              # Root standalone component
+│   ├── app.component.html
+│   └── app.component.scss
+│
+├── assets/                            # Static assets
+│   ├── images/
+│   ├── icons/
+│   ├── fonts/
+│   └── i18n/
+│
+├── environments/
+│   ├── environment.ts
+│   └── environment.prod.ts
+│
+├── styles/                            # Global styles
+│   ├── _variables.scss
+│   ├── _mixins.scss
+│   ├── _utilities.scss
+│   └── styles.scss
+│
+├── index.html
+├── main.ts
+└── styles.scss

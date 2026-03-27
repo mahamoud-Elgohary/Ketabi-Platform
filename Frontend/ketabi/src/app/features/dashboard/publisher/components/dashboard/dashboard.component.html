@@ -1,0 +1,105 @@
+<div class="publisher-dashboard-container">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Publisher Dashboard</h1>
+    <p class="dashboard-subtitle">Overview of your publishing activities</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-message">
+    <p>Loading dashboard data...</p>
+  </div>
+
+  <div *ngIf="error && !loading" class="alert alert-error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="dashboard-content">
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="card-icon">📚</div>
+        <div class="card-content">
+          <h3 class="card-title">Total Books</h3>
+          <p class="card-value">{{ stats.totalBooks }}</p>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="card-icon">📦</div>
+        <div class="card-content">
+          <h3 class="card-title">Total Orders</h3>
+          <p class="card-value">{{ stats.totalOrders }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <a routerLink="/publisher/books" class="action-card">
+        <div class="action-icon">📖</div>
+        <div class="action-content">
+          <h3>Manage Books</h3>
+          <p>View, add, or edit your published titles in one place.</p>
+          <span class="action-link">Go to Books →</span>
+        </div>
+      </a>
+      <a routerLink="/publisher/orders" class="action-card">
+        <div class="action-icon">🧾</div>
+        <div class="action-content">
+          <h3>Review Orders</h3>
+          <p>Track delivery and payment statuses for your orders.</p>
+          <span class="action-link">Go to Orders →</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="charts-section">
+      <div class="chart-card">
+        <h3 class="chart-title">Orders by Delivery Status</h3>
+        <div *ngIf="deliveryStatusKeys.length > 0" class="chart-content">
+          <div *ngFor="let status of deliveryStatusKeys" class="chart-bar-item">
+            <div class="bar-label">
+              <span class="status-name">{{ status }}</span>
+              <span class="status-count">{{ getStatusCount(status) }}</span>
+            </div>
+            <div class="bar-container">
+              <div
+                class="bar-fill"
+                [style.width.%]="getStatusPercentage(status, getTotalItemsCount())"
+                [class]="'bar-' + status.toLowerCase().replace(' ', '-')"
+              ></div>
+            </div>
+            <div class="bar-percentage">
+              {{ getStatusPercentage(status, getTotalItemsCount()) }}%
+            </div>
+          </div>
+        </div>
+        <div *ngIf="deliveryStatusKeys.length === 0" class="no-data">
+          No delivery status data available
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3 class="chart-title">Orders by Payment Status</h3>
+        <div *ngIf="paymentStatusKeys.length > 0" class="chart-content">
+          <div *ngFor="let status of paymentStatusKeys" class="chart-bar-item">
+            <div class="bar-label">
+              <span class="status-name">{{ status }}</span>
+              <span class="status-count">{{ getStatusCount(status) }}</span>
+            </div>
+            <div class="bar-container">
+              <div
+                class="bar-fill"
+                [style.width.%]="getStatusPercentage(status, getTotalItemsCount())"
+                [class]="'bar-' + status.toLowerCase().replace(' ', '-')"
+              ></div>
+            </div>
+            <div class="bar-percentage">
+              {{ getStatusPercentage(status, getTotalItemsCount()) }}%
+            </div>
+          </div>
+        </div>
+        <div *ngIf="paymentStatusKeys.length === 0" class="no-data">
+          No payment status data available
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

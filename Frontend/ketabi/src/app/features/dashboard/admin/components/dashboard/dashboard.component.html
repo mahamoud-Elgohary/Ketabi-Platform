@@ -1,0 +1,169 @@
+<app-chat *ngIf="isUserLoggedIn"></app-chat>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fas fa-book-reader"></i>
+        <span *ngIf="!sidebarCollapsed">Ketabi Admin</span>
+      </div>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <i class="fas" [class.fa-bars]="sidebarCollapsed" [class.fa-times]="!sidebarCollapsed"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <i [ngClass]="['fas', item.icon]"></i>
+        <span *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+        <span class="badge" *ngIf="item.badge && !sidebarCollapsed">{{ item.badge }}</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span *ngIf="!sidebarCollapsed">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search..." />
+      </div>
+
+      <div class="top-bar-actions">
+        <div class="user-menu">
+          <span class="user-name">{{ userName }}</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <div *ngIf="loading" class="loading">Loading dashboard...</div>
+
+      <div *ngIf="error" class="error">{{ error }}</div>
+
+      <!-- Stats Section -->
+      <section class="stats-section" *ngIf="!loading && !error">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-book"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ stats.totalBooks }}</div>
+              <div class="stat-label">Total Books</div>
+            </div>
+            <div class="stat-change" [ngClass]="getChangeClass(stats.booksChange)">
+              {{ getChangeIcon(stats.booksChange) }} {{ stats.booksChange }}%
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ stats.totalOrders }}</div>
+              <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-change" [ngClass]="getChangeClass(stats.ordersChange)">
+              {{ getChangeIcon(stats.ordersChange) }} {{ stats.ordersChange }}%
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ formatCurrency(stats.totalRevenue) }}</div>
+              <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-change" [ngClass]="getChangeClass(stats.revenueChange)">
+              {{ getChangeIcon(stats.revenueChange) }} {{ stats.revenueChange }}%
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ stats.totalUsers }}</div>
+              <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-change" [ngClass]="getChangeClass(stats.usersChange)">
+              {{ getChangeIcon(stats.usersChange) }} {{ stats.usersChange }}%
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Recent Activity Section -->
+      <section class="activity-section" *ngIf="!loading && !error">
+        <div class="activity-grid">
+          <!-- Recent Orders -->
+          <div class="activity-card">
+            <div class="activity-header">
+              <h3 class="activity-title">
+                <i class="fas fa-clock"></i>
+                Recent Orders
+              </h3>
+              <button class="view-all-btn" [routerLink]="['/admin/orders']">View All</button>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item" *ngFor="let order of recentOrders.slice(0, 5)">
+                <div class="activity-icon order">
+                  <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-text">{{ order.user.name }}</div>
+                  <div class="activity-time">{{ formatDate(order.createdAt) }}</div>
+                </div>
+                <div class="activity-value">{{ formatCurrency(order.totalPrice) }}</div>
+              </div>
+              <div *ngIf="recentOrders.length === 0" class="activity-item">
+                <div class="activity-content">
+                  <div class="activity-text">No recent orders</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Low Stock Books -->
+          <div class="activity-card">
+            <div class="activity-header">
+              <h3 class="activity-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                Low Stock Alert
+              </h3>
+              <button class="view-all-btn" [routerLink]="['/admin/books']">View All</button>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item" *ngFor="let book of lowStockBooks.slice(0, 5)">
+                <div class="activity-icon book">
+                  <i class="fas fa-book"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-text">{{ book.name }}</div>
+                  <div class="activity-time">{{ book.author }}</div>
+                </div>
+                <div class="activity-value">{{ book.stock }} left</div>
+              </div>
+              <div *ngIf="lowStockBooks.length === 0" class="activity-item">
+                <div class="activity-content">
+                  <div class="activity-text">All books are well stocked</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>

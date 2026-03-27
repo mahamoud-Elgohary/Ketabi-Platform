@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>NodeJS-Project.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<p><strong>Online Bookstore (E-commerce Platform) - MEAN Stack Project</strong></p>
+<ul>
+<li><a href="#project-overview">Project Overview</a></li>
+<li><a href="#project-features">Project Features</a>
+<ul>
+<li><a href="#backend-nodejs--expressjs--mongodb">Backend (Node.js + Express.js + MongoDB)</a>
+<ul>
+<li><a href="#1-user-authentication-and-authorization">1. User Authentication and Authorization</a></li>
+<li><a href="#2-restful-api-design">2. RESTful API Design</a></li>
+<li><a href="#3-database-design">3. Database Design</a></li>
+<li><a href="#4-middleware">4. Middleware</a></li>
+<li><a href="#5-advanced-features">5. Advanced Features</a></li>
+<li><a href="#6-file-handling">6. File Handling</a></li>
+<li><a href="#7-validation">7. Validation</a></li>
+<li><a href="#8-ai-idea-">8. AI idea :</a></li>
+<li><a href="#summary--">Summary :-</a></li>
+</ul>
+</li>
+<li><a href="#frontend-angular">Frontend (Angular)</a>
+<ul>
+<li><a href="#1-user-interface">1. User Interface</a></li>
+<li><a href="#2-authentication">2. Authentication</a></li>
+<li><a href="#3-api-integration">3. API Integration</a></li>
+<li><a href="#4-review-system">4. Review System</a></li>
+<li><a href="#5-advanced-features-1">5. Advanced Features</a></li>
+<li><a href="#summary---1">Summary :-</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#general-remarks">General Remarks</a></li>
+<li><a href="#important-features-for-research">Important Features for Research</a>
+<ul>
+<li><a href="#1-payment-integration">1. Payment Integration</a></li>
+<li><a href="#2-email-notifications">2. Email Notifications</a></li>
+<li><a href="#3-deployment">3. Deployment</a></li>
+<li><a href="#4-caching">4. Caching</a></li>
+<li><a href="#5-websockets--real-time-notifications">5. WebSockets--Real-Time Notifications</a></li>
+</ul>
+</li>
+<li><a href="#project-deliverables">Project Deliverables</a>
+<ul>
+<li><a href="#1-backend">1. Backend</a></li>
+<li><a href="#2-frontend">2. Frontend</a></li>
+<li><a href="#3-documentation">3. Documentation</a></li>
+<li><a href="#4-presentation">4. Presentation</a></li>
+<li><a href="#5-live-demo-deployed-application">5. Live Demo: Deployed application</a></li>
+</ul>
+</li>
+<li><a href="#topics-covered">Topics Covered</a></li>
+<li><a href="#topics-for-research">Topics for Research</a></li>
+<li><a href="#bonus">BONUS</a></li>
+</ul>
+<h2 id="project-overview">Project Overview</h2>
+<p>This project simulates a real-life e-commerce platform where users can browse books, add them to a cart, and place orders. It covers all the topics taught in the course and introduces additional concepts for students to research independently.</p>
+<h2 id="project-features">Project Features</h2>
+<h3 id="backend-nodejs--expressjs--mongodb">Backend (Node.js + Express.js + MongoDB)</h3>
+<h4 id="1-user-authentication-and-authorization">1. User Authentication and Authorization</h4>
+<ul>
+<li>Users can register, log in, and log out.</li>
+<li>Use JWT for authentication and authorization.</li>
+<li>Implement role-based access control (e.g., admin vs. regular user).</li>
+<li>password hashing (bcrypt)</li>
+<li>Email Verification for Signup (OTP or Verification Link)</li>
+<li>Password Reset</li>
+</ul>
+<h4 id="2-restful-api-design">2. RESTful API Design</h4>
+<ul>
+<li>Design RESTful endpoints for:
+<ul>
+<li>User management (register, login, profile update).</li>
+<li>Book management (CRUD operations for books, accessible only to admins,image uploads (Multer)).</li>
+<li>Cart management (add/remove books, view cart).</li>
+<li>Order management (place orders, view order history).</li>
+<li>Review management (submit, view, update, delete reviews).</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-database-design">3. Database Design</h4>
+<ul>
+<li>Use Mongoose to define schemas and models for:
+<ul>
+<li>Users (name, email, password, role).</li>
+<li>Books (title, author, price, description, stock, reviews, image(url or name)).</li>
+<li>Orders (user, books, total price, status).</li>
+<li>Reviews (user, book, rating, review, createdAt).</li>
+</ul>
+</li>
+<li>ERD Required</li>
+</ul>
+<h4 id="4-middleware">4. Middleware</h4>
+<ul>
+<li>Implement custom middleware for:
+<ul>
+<li>Authentication (verify JWT).</li>
+<li>Error handling (centralized error handling middleware).</li>
+<li>Logging (log requests to a file using <code>fs</code> or a logging library like <code>winston</code>).</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-advanced-features">5. Advanced Features</h4>
+<ul>
+<li>Use <code>bcrypt.js</code> to hash passwords before saving them to the database.</li>
+<li>Implement pagination and filtering for the book list API.</li>
+<li>Use transactions to handle order placement (e.g., reduce book stock and create an order in a single transaction)[stock management (MongoDB transactions)].</li>
+</ul>
+<h4 id="6-file-handling">6. File Handling</h4>
+<ul>
+<li>Allow admins to upload book covers using <code>multer</code> (research required) or online CDN.</li>
+<li>Serve static files (e.g., book covers) using Express.</li>
+</ul>
+<h4 id="7-validation">7. Validation</h4>
+<ul>
+<li>
+<p>Use Mongoose validations for:</p>
+<ul>
+<li>User input (e.g., email format, password strength).</li>
+<li>Book data (e.g., price must be positive, stock must be an integer).</li>
+<li>Review data (e.g., rating must be between 1 and 5, review text must not exceed 500 characters).</li>
+</ul>
+</li>
+<li>
+<p>Use Schema validation like (Joi, Ajv, etc...)</p>
+</li>
+</ul>
+<h4 id="8-ai-idea">8. AI idea :</h4>
+<ol>
+<li>AI Book Assistant (Chatbot)<pre class="hljs"><code><div>Embed a chatbot to answer questions like:
+&quot;Which books are best for learning Angular?&quot;
+</div></code></pre>
+</li>
+<li>AI-Powered Book Recommendations</li>
+</ol>
+<h4 id="summary">Summary :-</h4>
+<p>✔ User Auth: Register/login (JWT), password hashing (bcrypt)
+✔ Book Management: CRUD (Admin-only), image uploads (Multer)
+✔ Orders &amp; Cart: Checkout, stock management (MongoDB transactions)
+✔ Reviews: Rating system (1-5 stars)
+✔ Validation: Schema (Mongoose) + Request (Joi/Ajv)</p>
+<hr>
+<h3 id="frontend-angular">Frontend (Angular)</h3>
+<h4 id="1-user-interface">1. User Interface</h4>
+<ul>
+<li>Home page: Display a list of books with search and filter options.</li>
+<li>Book details page: Show book details, allow users to add the book to their cart, and display reviews.</li>
+<li>Cart page: Display items in the cart and allow users to proceed to checkout.</li>
+<li>Order history page: Display past orders for logged-in users.</li>
+</ul>
+<h4 id="2-authentication">2. Authentication</h4>
+<ul>
+<li>Implement login and registration forms.</li>
+<li>Use Angular services to manage JWT tokens and user sessions.</li>
+</ul>
+<h4 id="3-api-integration">3. API Integration</h4>
+<ul>
+<li>Use Angular's <code>HttpClient</code> to interact with the backend API.</li>
+<li>Handle errors and display appropriate messages to the user.</li>
+</ul>
+<h4 id="4-review-system">4. Review System</h4>
+<ul>
+<li>Add a review form on the book details page for users who have purchased the book.</li>
+<li>Display all reviews for a book on the book details page.</li>
+<li>Allow users to edit or delete their reviews.</li>
+</ul>
+<h4 id="5-advanced-features">5. Advanced Features</h4>
+<ul>
+<li>Implement lazy loading for Angular modules to optimize performance.</li>
+<li>Use Angular Material or Bootstrap for a responsive and modern UI.</li>
+</ul>
+<h4 id="summary">Summary :-</h4>
+<p>✔ Responsive UI: Angular Material/Bootstrap
+✔ Dynamic Pages: Book listings, cart, order history
+✔ API Integration: Angular HttpClient for backend calls</p>
+<hr>
+<h2 id="general-remarks">General Remarks</h2>
+<ul>
+<li>Any pagination needs to be server-side pagination.</li>
+<li>Good UI.</li>
+<li>Think about model relations.</li>
+<li>Think about what needs to be indexed in your models.</li>
+<li>Use github, show the world.</li>
+<li>Deploy your work to the web. (Use heroku and atlas).</li>
+<li>Share your work on Linkedin, brand yourself.</li>
+<li>Lint your projects.</li>
+</ul>
+<h2 id="important-features-for-research">Important Features for Research</h2>
+<h3 id="1-payment-integration">1. Payment Integration</h3>
+<ul>
+<li>Integrate a payment gateway (e.g., Stripe or PayPal) to handle payments during checkout.</li>
+<li>Research how to securely handle payment information.</li>
+</ul>
+<h3 id="2-email-notifications">2. Email Notifications</h3>
+<ul>
+<li>Send email notifications to users when they register, place an order, or when their order status changes.</li>
+<li>Use a library like <code>nodemailer</code> for sending emails.</li>
+</ul>
+<h3 id="3-deployment">3. Deployment</h3>
+<ul>
+<li>Deploy the application to a cloud platform (e.g., Heroku, AWS, or Vercel).</li>
+<li>Research how to configure environment variables for production.</li>
+</ul>
+<h3 id="4-caching">4. Caching</h3>
+<ul>
+<li>Implement caching for frequently accessed data (e.g., book list) using Redis or in-memory caching.</li>
+</ul>
+<h3 id="5-websockets--real-time-notifications">5. WebSockets--Real-Time Notifications</h3>
+<ul>
+<li>Use WebSockets to implement real-time features (e.g., notify admins when a new order is placed).</li>
+</ul>
+<hr>
+<h2 id="project-deliverables">Project Deliverables</h2>
+<h3 id="1-backend">1. Backend</h3>
+<ul>
+<li>A fully functional RESTful API with proper documentation (e.g., using, postman collection or bruno collection).</li>
+<li>Proper error handling and validation.</li>
+<li>Git repository with clear commit history. (make sure every commit has a clear message, everyones should contribute to the project)</li>
+</ul>
+<h3 id="2-frontend">2. Frontend</h3>
+<ul>
+<li>A responsive and user-friendly Angular application.</li>
+<li>Proper state management (e.g., using Angular services or NgRx).</li>
+<li>Git repository with clear commit history. (make sure every commit has a clear message, everyones should contribute to the project)</li>
+</ul>
+<h3 id="3-documentation">3. Documentation</h3>
+<ul>
+<li>A README file explaining how to set up and run the project.</li>
+<li>Swagger Documentation</li>
+</ul>
+<h3 id="4-presentation">4. Presentation</h3>
+<ul>
+<li>A presentation demonstrating the project features and discussing the technologies used.</li>
+<li>A demo of the application with a walkthrough of the codebase.</li>
+</ul>
+<h3 id="5-live-demo-deployed-application">5. Live Demo: Deployed application</h3>
+<hr>
+<h2 id="topics-covered">Topics Covered</h2>
+<ul>
+<li>Web servers, HTTP/HTTPS, and RESTful APIs.</li>
+<li>Node.js, Express.js, and MongoDB.</li>
+<li>Authentication, authorization, and error handling.</li>
+<li>Frontend development with Angular.</li>
+<li>Advanced topics like payment integration, email notifications, and deployment.</li>
+</ul>
+<hr>
+<h2 id="topics-for-research">Topics for Research</h2>
+<ul>
+<li>Payment gateway integration.</li>
+<li>Email notifications using <code>nodemailer</code>.</li>
+<li>Uploading Files with Multer.</li>
+<li>Running Cron Jobs (node-cron).</li>
+<li>Logging with Winston &amp; Morgan.</li>
+<li>OAuth2 and Social Login (Google, GitHub, Facebook).</li>
+<li>Rate Limiting with express-rate-limit.</li>
+<li>Caching with Redis.</li>
+<li>Full text search.</li>
+<li>Role-Based Access Control (RBAC).</li>
+<li>Access Control Lists (ACLs).</li>
+<li>Session Management (express-session, connect-mongo).</li>
+<li>Single Active Session Restriction.</li>
+<li>Real-time features with WebSockets.</li>
+<li>Deployment to cloud platforms.</li>
+</ul>
+<hr>
+<h2 id="bonus">BONUS</h2>
+<ul>
+<li>Use idP. (register, login with google and Facebook)[Social Login (Google/Facebook OAuth)].</li>
+</ul>
+<hr>
+
+</body>
+</html>

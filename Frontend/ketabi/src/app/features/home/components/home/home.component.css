@@ -1,0 +1,70 @@
+.categories-section {
+  background: linear-gradient(135deg, #f5f5dc 0%, #fff8dc 100%);
+  padding: 3rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.featured-section {
+  background: #f5f5dc;
+}
+
+.section-title {
+  font-family: 'Georgia', serif;
+  color: #2c1810;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.newsletter-card {
+  background: linear-gradient(135deg, #fff8dc, #f5f5dc);
+  padding: 3rem 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.newsletter-card h3 {
+  color: #2c1810;
+  font-family: 'Georgia', serif;
+  font-weight: 600;
+}
+
+.newsletter-input {
+  border: 2px solid #daa520;
+  border-radius: 8px;
+  padding: 0.8rem;
+}
+
+.newsletter-input:focus {
+  border-color: #8b4513;
+  box-shadow: 0 0 0 0.2rem rgba(218, 165, 32, 0.25);
+}
+
+.btn-newsletter {
+  background-color: #daa520;
+  color: white;
+  font-weight: 600;
+  border-radius: 25px;
+  padding: 1rem;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-newsletter:hover {
+  background-color: #b8941c;
+  transform: translateY(-2px);
+}
+.btn-more {
+  border: 1px solid #daa520;
+  color: #daa520;
+  background: transparent;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.btn-more:hover {
+  background: #daa520;
+  color: #fff;
+  text-decoration: none;
+}

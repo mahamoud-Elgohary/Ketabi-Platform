@@ -1,0 +1,569 @@
+<app-chat *ngIf="isUserLoggedIn && (role === 'user' || role === 'admin')"></app-chat>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fas fa-book-reader"></i>
+        <span *ngIf="!sidebarCollapsed">Ketabi Admin</span>
+      </div>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <i class="fas" [class.fa-bars]="sidebarCollapsed" [class.fa-times]="!sidebarCollapsed"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <i [ngClass]="['fas', item.icon]"></i>
+        <span *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+        <span class="badge" *ngIf="item.badge && !sidebarCollapsed">{{ item.badge }}</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span *ngIf="!sidebarCollapsed">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search..." />
+      </div>
+
+      <div class="top-bar-actions">
+        <div class="user-menu">
+          <img src="https://via.placeholder.com/40" alt="Admin" class="user-avatar" />
+          <span class="user-name">Admin User</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <!-- Books Container -->
+      <div class="books-container">
+        <!-- Header Section -->
+        <div class="books-header">
+          <div class="header-left">
+            <h1 class="page-title">
+              <i class="fas fa-book"></i>
+              Books Management
+            </h1>
+            <p class="page-subtitle">Manage your book inventory and catalog</p>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon total">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ totalBooks }}</div>
+              <div class="stat-label">Total Books</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon published">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ publishedBooks }}</div>
+              <div class="stat-label">Published</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon categories">
+              <i class="fas fa-tags"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ totalGenres }}</div>
+              <div class="stat-label">Genres</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon revenue">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">${{ totalRevenue.toFixed(2) }}</div>
+              <div class="stat-label">Total Value</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters and Search Section -->
+        <div class="filters-section">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              placeholder="Search by title, author, ISBN..."
+              [(ngModel)]="searchTerm"
+              (input)="onSearch()"
+            />
+          </div>
+
+          <div class="filters">
+            <div class="filter-group">
+              <label>Genre</label>
+              <select [(ngModel)]="selectedGenre" (change)="onFilterChange()">
+                <option value="">All Genres</option>
+                <option *ngFor="let genre of genres" [value]="genre._id">
+                  {{ genre.name }}
+                </option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Language</label>
+              <select [(ngModel)]="selectedLanguage" (change)="onFilterChange()">
+                <option value="">All Languages</option>
+                <option value="english">English</option>
+                <option value="arabic">Arabic</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Age Group</label>
+              <select [(ngModel)]="selectedAge" (change)="onFilterChange()">
+                <option value="">All Ages</option>
+                <option value="kids">Kids</option>
+                <option value="adults">Adults</option>
+                <option value="all">All</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Price Range</label>
+              <select [(ngModel)]="selectedPriceRange" (change)="onFilterChange()">
+                <option value="">All Prices</option>
+                <option value="0-10">$0 - $10</option>
+                <option value="10-25">$10 - $25</option>
+                <option value="25-50">$25 - $50</option>
+                <option value="50+">$50+</option>
+              </select>
+            </div>
+
+            <button class="btn btn-outline" (click)="resetFilters()">
+              <i class="fas fa-redo"></i>
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="view-toggle">
+          <button
+            class="view-btn"
+            [class.active]="viewMode === 'grid'"
+            (click)="setViewMode('grid')"
+          >
+            <i class="fas fa-th"></i>
+            Grid
+          </button>
+          <button
+            class="view-btn"
+            [class.active]="viewMode === 'list'"
+            (click)="setViewMode('list')"
+          >
+            <i class="fas fa-list"></i>
+            List
+          </button>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loading" class="loading-state">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading books...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="errorMessage" class="error-state">
+          <i class="fas fa-exclamation-circle"></i>
+          <p>{{ errorMessage }}</p>
+          <button class="btn btn-primary" (click)="loadBooks()">Try Again</button>
+        </div>
+
+        <!-- Grid View -->
+        <div *ngIf="!loading && !errorMessage && viewMode === 'grid'" class="books-grid">
+          <div *ngFor="let book of paginatedBooks" class="book-card">
+            <div class="book-image">
+              <img
+                [src]="book.image.url || 'https://via.placeholder.com/200x300'"
+                [alt]="book.name"
+              />
+              <div class="book-overlay">
+                <button class="overlay-btn" (click)="viewBook(book)" title="View Details">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="overlay-btn" (click)="editBook(book)" title="Edit Book">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="overlay-btn" (click)="deleteBook(book)" title="Delete Book">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+              <span class="book-status" [ngClass]="'status-' + book.status">
+                {{ book.status }}
+              </span>
+            </div>
+            <div class="book-info">
+              <h3 class="book-title">{{ book.name }}</h3>
+              <p class="book-author">
+                <i class="fas fa-user"></i>
+                {{ book.author }}
+              </p>
+              <div class="book-meta">
+                <span class="book-category">
+                  <i class="fas fa-tag"></i>
+                  {{ book.genreName }}
+                </span>
+                <span class="book-price">${{ book.price.toFixed(2) }}</span>
+              </div>
+              <div class="book-stats">
+                <span class="stat-item">
+                  <i class="fas fa-star"></i>
+                  {{ book.avgRating || 0 }}
+                </span>
+                <span class="stat-item">
+                  <i class="fas fa-box"></i>
+                  {{ book.stock || 0 }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- List View -->
+        <div *ngIf="!loading && !errorMessage && viewMode === 'list'" class="table-container">
+          <table class="books-table">
+            <thead>
+              <tr>
+                <th>
+                  <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+                </th>
+                <th (click)="sortBy('title')">
+                  Book
+                  <i class="fas fa-sort sort-icon"></i>
+                </th>
+                <th (click)="sortBy('author')">
+                  Author
+                  <i class="fas fa-sort sort-icon"></i>
+                </th>
+                <th>Category</th>
+                <th (click)="sortBy('price')">
+                  Price
+                  <i class="fas fa-sort sort-icon"></i>
+                </th>
+                <th>Stock</th>
+                <th>Rating</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let book of paginatedBooks" [class.selected]="book.selected">
+                <td>
+                  <input type="checkbox" [(ngModel)]="book.selected" (change)="onBookSelect()" />
+                </td>
+                <td>
+                  <div class="book-cell">
+                    <img
+                      [src]="book.image.url || 'https://via.placeholder.com/50x75'"
+                      [alt]="book.name"
+                      class="book-thumbnail"
+                    />
+                    <div class="book-details">
+                      <div class="book-name">{{ book.name }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ book.author }}</td>
+                <td>
+                  <span class="category-badge">
+                    <i class="fas fa-tag"></i>
+                    {{ book.genreName }}
+                  </span>
+                </td>
+                <td class="price-cell">${{ book.price.toFixed(2) }}</td>
+                <td>
+                  <span class="stock-badge" [class.low-stock]="(book.stock || 0) < 10">
+                    {{ book?.stock || 0 }}
+                  </span>
+                </td>
+                <td>
+                  <div class="rating-cell">
+                    <i class="fas fa-star"></i>
+                    {{ book.rating || 0 }}
+                  </div>
+                </td>
+                <td>
+                  <span class="status-badge" [ngClass]="'status-' + book.status">
+                    {{ book.status }}
+                  </span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-icon btn-view" (click)="viewBook(book)" title="View Details">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn-icon btn-edit" (click)="editBook(book)" title="Edit Book">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button
+                      class="btn-icon btn-delete"
+                      (click)="deleteBook(book)"
+                      title="Delete Book"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loading && !errorMessage && filteredBooks.length === 0" class="empty-state">
+          <i class="fas fa-book-open"></i>
+          <h3>No Books Found</h3>
+          <p>Try adjusting your search or filter criteria</p>
+          <button class="btn btn-primary" (click)="openAddBookModal()">
+            <i class="fas fa-plus"></i>
+            Add Your First Book
+          </button>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" *ngIf="!loading && !errorMessage && filteredBooks.length > 0">
+          <div class="pagination-info">
+            Showing {{ getPaginationInfo().start }} to {{ getPaginationInfo().end }} of
+            {{ getPaginationInfo().total }} books
+          </div>
+          <div class="pagination-controls">
+            <button
+              class="btn-page"
+              [disabled]="currentPage === 1"
+              (click)="goToPage(currentPage - 1)"
+            >
+              <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <button
+              *ngFor="let page of getPageNumbers()"
+              class="btn-page"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+
+            <button
+              class="btn-page"
+              [disabled]="currentPage === totalPages"
+              (click)="goToPage(currentPage + 1)"
+            >
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <div class="page-size-selector">
+            <label>Show</label>
+            <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+              <option [value]="12">12</option>
+              <option [value]="24">24</option>
+              <option [value]="48">48</option>
+              <option [value]="96">96</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Book Modal -->
+<div class="modal" *ngIf="showBookModal" (click)="closeModal()">
+  <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        {{
+          modalMode === 'view'
+            ? 'Book Details'
+            : modalMode === 'edit'
+            ? 'Edit Book'
+            : 'Add New Book'
+        }}
+      </h2>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-column">
+          <div class="form-group">
+            <label>Title *</label>
+            <input
+              type="text"
+              [(ngModel)]="selectedBook.title"
+              [disabled]="modalMode === 'view'"
+              placeholder="Enter book title"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Author *</label>
+            <input
+              type="text"
+              [(ngModel)]="selectedBook.author"
+              [disabled]="modalMode === 'view'"
+              placeholder="Enter author name"
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Price *</label>
+              <input
+                type="number"
+                [(ngModel)]="selectedBook.price"
+                [disabled]="modalMode === 'view'"
+                placeholder="0.00"
+                step="0.01"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Stock</label>
+              <input
+                type="number"
+                [(ngModel)]="selectedBook.stock"
+                [disabled]="modalMode === 'view'"
+                placeholder="0"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Genre *</label>
+              <select [(ngModel)]="selectedBook.genre" [disabled]="modalMode === 'view'">
+                <option value="">Select Genre</option>
+                <option *ngFor="let genre of genres" [value]="genre._id">
+                  {{ genre.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Recommended Age</label>
+              <select [(ngModel)]="selectedBook.recommendedAge" [disabled]="modalMode === 'view'">
+                <option value="all">All</option>
+                <option value="kids">Kids</option>
+                <option value="adults">Adults</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select [(ngModel)]="selectedBook.status" [disabled]="modalMode === 'view'">
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Publisher</label>
+            <input
+              type="text"
+              [(ngModel)]="selectedBook.publisher"
+              [disabled]="modalMode === 'view'"
+              placeholder="Enter publisher name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Publication Year</label>
+            <input
+              type="number"
+              [(ngModel)]="selectedBook.publicationYear"
+              [disabled]="modalMode === 'view'"
+              placeholder="2024"
+            />
+          </div>
+        </div>
+
+        <div class="form-column">
+          <div class="form-group">
+            <label>Cover Image URL</label>
+            <input
+              type="text"
+              [(ngModel)]="selectedBook.coverImage"
+              [disabled]="modalMode === 'view'"
+              placeholder="Enter image URL"
+            />
+            <div class="image-preview" *ngIf="selectedBook.coverImage">
+              <img [src]="selectedBook.coverImage" alt="Cover Preview" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea
+              [(ngModel)]="selectedBook.description"
+              [disabled]="modalMode === 'view'"
+              rows="6"
+              placeholder="Enter book description..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Pages</label>
+            <input
+              type="number"
+              [(ngModel)]="selectedBook.pages"
+              [disabled]="modalMode === 'view'"
+              placeholder="0"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Language</label>
+            <select [(ngModel)]="selectedBook.language" [disabled]="modalMode === 'view'">
+              <option value="English">English</option>
+              <option value="Arabic">Arabic</option>
+              <option value="French">French</option>
+              <option value="Spanish">Spanish</option>
+              <option value="German">German</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeModal()">
+        {{ modalMode === 'view' ? 'Close' : 'Cancel' }}
+      </button>
+      <button *ngIf="modalMode !== 'view'" class="btn btn-primary" (click)="saveBook()">
+        <i class="fas fa-save"></i>
+        {{ modalMode === 'edit' ? 'Update Book' : 'Add Book' }}
+      </button>
+    </div>
+  </div>
+</div>

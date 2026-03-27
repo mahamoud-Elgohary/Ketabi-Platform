@@ -1,0 +1,10 @@
+1-User Authentication (JWT, Bcrypt)--> Abdelrahman
+2-Authorization (JWT)--> Abdelrahman
+3-Update Profile -->Mohamed Hytham
+4-CRUD operations for books (Only for Admin),and image uploads (Multer) and implement pagination and filtering --> Mohamed Hytham
+5- add to cart , remove from cart, view cart--> AbdelGhafar
+6-Place Order and View Orders History and Use transactions to handle order placement (e.g., reduce book stock and create an order in a single transaction)[stock management (MongoDB transactions)]. and stripe or paymoob -->AbdelGhafar
+7-CRUD operations for reviews -->Mahmoud Gohary
+8-Error handling Middleware -->Mostafa
+9-Logging Middleware (Morgan) -->Mahmoud Gohary
+10- AI idea -->Mostafa

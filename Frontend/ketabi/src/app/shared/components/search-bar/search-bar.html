@@ -1,0 +1,86 @@
+<!-- search-bar.component.html -->
+<div class="search-container" borderRadius="200px">
+  <form (ngSubmit)="onSearch()" class="search-form">
+    <div class="search-input-wrapper">
+
+
+      <!-- Input Field -->
+      <input
+        type="text"
+        [formControl]="searchControl"
+        placeholder="Search for a book or author..."
+        class="search-input"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+        autocomplete="off"
+      />
+
+      <!-- Loading Spinner -->
+      <div class="loading-spinner" *ngIf="isLoading">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+
+      <!-- Clear Button -->
+      <button
+        type="button"
+        class="clear-btn"
+        *ngIf="searchControl.value && !isLoading"
+        (click)="clearSearch()"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+
+      <!-- Search Button -->
+      <button type="button" class="search-btn" (click)="onSearch()">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+
+    <!-- Autocomplete Suggestions Dropdown -->
+    <div
+      class="suggestions-dropdown"
+      *ngIf="showSuggestions && suggestions.length > 0"
+    >
+      <div
+        class="suggestion-item"
+        *ngFor="let suggestion of suggestions"
+        (click)="selectSuggestion(suggestion)"
+      >
+        <img
+          [src]="
+            suggestion.image?.url || 'default-book.jpg'
+          "
+          [alt]="suggestion.name"
+          class="suggestion-image"
+        />
+        <div class="suggestion-content">
+          <!-- Highlight matching text -->
+          <div class="suggestion-name">
+            {{ suggestion.name }}
+          </div>
+          <div class="suggestion-author" *ngIf="suggestion.author">
+            by {{ suggestion.author }}
+          </div>
+          <div class="suggestion-price" *ngIf="suggestion.price">
+            {{ suggestion.price | currency }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results Message -->
+    <div
+      class="no-suggestions"
+      *ngIf="showSuggestions && suggestions.length === 0 && !isLoading"
+    >
+      <i class="fas fa-search"></i>
+      <span>No results found for "{{ searchControl.value }}"</span>
+    </div>
+
+    <!-- Warning Message -->
+    <div class="warning-message" *ngIf="fallbackWarning">
+      <i class="fas fa-info-circle"></i>
+      <span>{{ fallbackWarning }}</span>
+    </div>
+  </form>
+</div>

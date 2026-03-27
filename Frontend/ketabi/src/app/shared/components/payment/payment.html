@@ -1,0 +1,108 @@
+<div class="payment-container container py-4">
+
+  <h2 class="page-title fw-bold mb-4">Complete Your Payment</h2>
+
+  <div class="row g-4">
+
+    <!-- LEFT: ORDER SUMMARY -->
+    <div class="col-lg-6">
+      <div class="summary-box p-4 rounded-4 shadow">
+
+        <h4 class="section-title mb-3">Order Summary</h4>
+
+        <!-- ITEMS -->
+        <div class="items-list d-flex flex-wrap gap-3">
+          <div *ngFor="let item of cartItems" class="summary-item p-2 rounded d-flex">
+            <img [src]="item.image.url || 'default-book.jpg'"
+                 class="item-img rounded me-2" />
+
+            <div>
+              <div class="fw-bold small">{{ item.name }}</div>
+              <div class="small">Qty: {{ item.quantity }}</div>
+              <div class="small">{{ item.type }}</div>
+              <div class="small price-text">{{ item.type === 'ebook' ? item.price * 0.45: item.price }} EGP</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- COUPON -->
+        <div *ngIf="orderDetails?.coupon" class="coupon-box mb-2">
+          <span class="fw-bold">Coupon Applied:</span>
+          <span class="ms-1">{{ orderDetails.coupon }}</span>
+          <div class="small">
+            Discount: {{ orderDetails.discountApplied }}%
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- GIFT -->
+        <div *ngIf="orderDetails?.isGift" class="gift-box mb-3 p-2 rounded">
+          <div class="fw-bold">🎁 Gift Order</div>
+          <div>Recipient: {{ orderDetails.recipientEmail }}</div>
+          <div>
+            Message: <span class="small fst-italic">{{ orderDetails.personalizedMessage }}</span>
+          </div>
+        </div>
+
+        <!-- PRICING -->
+        <div class="d-flex justify-content-between mb-2">
+          <span>Subtotal</span>
+          <span class="fw-bold">{{ orderDetails?.totalPrice | currency: 'EGP'}}</span>
+        </div>
+
+        <div *ngIf="orderDetails?.finalPrice"
+             class="d-flex justify-content-between mb-2 fw-bold final-price">
+          <span>Final Price</span>
+          <span>{{ orderDetails.finalPrice | currency: 'EGP'}}</span>
+        </div>
+
+        <!-- SHIPPING -->
+        <div *ngIf="orderDetails?.shippingAddress.city" class="shipping-block mt-3 small">
+          <div class="fw-bold mb-1">Shipping Address:</div>
+
+          <div class="shipping-box p-2 rounded">
+            <div><strong>Street:</strong> {{ orderDetails.shippingAddress.street || 'No Address Provided' }}</div>
+            <div><strong>City:</strong> {{ orderDetails.shippingAddress.city || 'No Address Provided' }}</div>
+            <div><strong>Phone:</strong> {{ orderDetails.shippingAddress.phoneNumber }}</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: PAYMENT -->
+    <div class="col-lg-6">
+      <div class="payment-box p-4 rounded-4 shadow">
+
+        <h4 class="section-title mb-3">Payment Details</h4>
+
+        <input type="text"
+               class="input-field form-control mb-3"
+               placeholder="Full name"
+               [(ngModel)]="name">
+
+        <input type="email"
+               class="input-field form-control mb-3"
+               placeholder="Email"
+               [(ngModel)]="email">
+
+        <label class="mb-1 field-label">Card Information</label>
+        <div id="card-element" class="stripe-element p-3 rounded mb-3"></div>
+
+        <div *ngIf="errorMessage" class="text-danger small mb-2">
+          {{ errorMessage }}
+        </div>
+
+        <button class="btn pay-btn w-100 py-2 fw-bold mt-2"
+                (click)="pay()" [disabled]="processing">
+          {{ processing ? 'Processing...' : 'Pay Now' }}
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+</div>

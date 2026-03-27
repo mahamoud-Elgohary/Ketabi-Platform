@@ -1,0 +1,808 @@
+{
+	"info": {
+		"_postman_id": "9c22a273-55b3-49b9-8b3b-a46e825dce0e",
+		"name": "Bookstore API",
+		"description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21750289",
+		"_collection_link": "https://grey-station-736288.postman.co/workspace/ITI~60187ff3-7f3d-4356-a810-7d2c3cec7c06/collection/21750289-9c22a273-55b3-49b9-8b3b-a46e825dce0e?action=share&source=collection_link&creator=21750289"
+	},
+	"item": [
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Get cart",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDFmNmJjM2M5ZTEwYWY5YzA5YjU5NCIsInJvbGUiOiJhZG1pbiIsIm5hbWUiOiJBYmRlbHJhaG1hbiBTYWxhaCIsImlhdCI6MTc2MTczNjQyMywiZXhwIjoxNzYxODIyODIzLCJqdGkiOiJLaVZfWjhva292SHJJYXN6YjhkbS0ifQ.TxLcaE-_42AJv07v0Vm5iZL-4sy6ail-606PnbRaX1I",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Cart Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZmU0NTQwODRkMTczMzdiMGJkZjI2ZSIsInJvbGUiOiJwdWJsaXNoZXIiLCJuYW1lIjoiQWJkZWxyYWhtYW4gU2FsYWgiLCJpYXQiOjE3NjE3MjUxOTUsImV4cCI6MTc2MTgxMTU5NSwianRpIjoiZ3BPZnZ5dndrX09OekZZMHNsUkFOIn0.-06dwSXSeybSVamQIkCxXp5gwsyM5Q8sIoNw_u0j23o",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"book\": \"6901f8d5a42289313e7be9f6\",\r\n  \"quantity\": 2,\r\n  \"type\": \"ebook\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cart Item",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"quantity\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/cart/68edbddb65aeae96a776bab8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"cart",
+								"68edbddb65aeae96a776bab8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete item",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/cart/68edbddb65aeae96a776bab8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"cart",
+								"68edbddb65aeae96a776bab8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminAccessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/cart/remind/68effde815c269834696a65c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"cart",
+								"remind",
+								"68effde815c269834696a65c"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "create order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDFhZmE0MzA2ZGVhMzliMmZjN2M0MCIsInJvbGUiOiJhZG1pbiIsIm5hbWUiOiJBYmRlbHJhaG1hbiBTYWxhaCIsImlhdCI6MTc2MTcxODI2MywiZXhwIjoxNzYxODA0NjYzLCJqdGkiOiJQbFF6eFItVDJ0UE5PcWcwNnM3MngifQ.eO9W7HFCdaHobXjy-xrVmq53ZV_e6dSkHl2xGcz-cCI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"book\": \"68edbddb65aeae96a776bab8\",\r\n      \"quantity\": 2,\r\n      \"type\": \"physical\"\r\n    }\r\n  ],\r\n  \"paymentMethod\": \"Stripe\",\r\n  \"shippingAddress\": {\r\n    \"street\": \"123 Main St\",\r\n    \"city\": \"New York\",\r\n    \"postalCode\": \"10001\",\r\n    \"country\": \"USA\",\r\n    \"phoneNumber\": \"123-456-7890\"\r\n  },\r\n  \"isGift\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/orders",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all orders",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"book\": \"68edbddb65aeae96a776bab8\",\r\n      \"quantity\": 2,\r\n      \"type\": \"physical\"\r\n    }\r\n  ],\r\n  \"paymentMethod\": \"Stripe\",\r\n  \"shippingAddress\": {\r\n    \"street\": \"123 Main St\",\r\n    \"city\": \"New York\",\r\n    \"postalCode\": \"10001\",\r\n    \"country\": \"USA\",\r\n    \"phoneNumber\": \"123-456-7890\"\r\n  },\r\n  \"isGift\": false\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/orders/order-history?user=68fe454084d17337b0bdf26e",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"orders",
+								"order-history"
+							],
+							"query": [
+								{
+									"key": "user",
+									"value": "68fe454084d17337b0bdf26e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDFhZmE0MzA2ZGVhMzliMmZjN2M0MCIsInJvbGUiOiJhZG1pbiIsIm5hbWUiOiJBYmRlbHJhaG1hbiBTYWxhaCIsImlhdCI6MTc2MTcxODI2MywiZXhwIjoxNzYxODA0NjYzLCJqdGkiOiJQbFF6eFItVDJ0UE5PcWcwNnM3MngifQ.eO9W7HFCdaHobXjy-xrVmq53ZV_e6dSkHl2xGcz-cCI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"book\": \"68edbddb65aeae96a776bab8\",\r\n      \"quantity\": 2,\r\n      \"type\": \"physical\"\r\n    }\r\n  ],\r\n  \"paymentMethod\": \"Stripe\",\r\n  \"shippingAddress\": {\r\n    \"street\": \"123 Main St\",\r\n    \"city\": \"New York\",\r\n    \"postalCode\": \"10001\",\r\n    \"country\": \"USA\",\r\n    \"phoneNumber\": \"123-456-7890\"\r\n  },\r\n  \"isGift\": false\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/orders/order-history?user=6901afa4306dea39b2fc7c40",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"orders",
+								"order-history"
+							],
+							"query": [
+								{
+									"key": "user",
+									"value": "6901afa4306dea39b2fc7c40"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Confirm-login-otp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"otp\" : \"929212\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/confirm-login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"confirm-login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Abdelghafaar\",\r\n  \"email\": \"abdonashaatking76@gmail.com\",\r\n  \"password\": \"123456789\",\r\n  \"confirmPassword\": \"123456789\",\r\n  \"phone\": \"+1234567890\",\r\n  \"gender\": \"male\",\r\n  \"address\": [\r\n    {\r\n      \"street\": \"123 Main St\",\r\n      \"city\": \"Cairo\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"sabdelrahman110@gmail.com\",\r\n  \"password\": \"Abdelrahman123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "coupons",
+			"item": [
+				{
+					"name": "getAllCoupons",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/coupons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"coupons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add coupon",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"code\": \"MAXDISCOUNT\",\r\n    \"description\": \"Our highest possible discount for a limited period.\",\r\n    \"discountPercentage\": 100,\r\n    \"minOrderValue\": 1000,\r\n    \"expiryDate\": \"2025-12-12T12:12:12.000Z\",\r\n    \"usageLimit\": 42,\r\n    \"isActive\": true\r\n  }"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/coupons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"coupons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editCoupon",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"minOrderValue\": 100000,\r\n    \"usageLimit\":25\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/coupons/68f3d69deb16a465064c3754",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"coupons",
+								"68f3d69deb16a465064c3754"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete coupon",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/coupons/assssagfasd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"coupons",
+								"assssagfasd"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "books",
+			"item": [
+				{
+					"name": "get all books",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"book\": \"{{book1Id}}\",\r\n      \"quantity\": 2,\r\n      \"price\": 10.99,\r\n      \"type\": \"Physical\"\r\n    },\r\n    {\r\n      \"book\": \"{{book2Id}}\",\r\n      \"quantity\": 1,\r\n      \"price\": 5.99,\r\n      \"type\": \"Ebook\"\r\n    }\r\n  ],\r\n  \"discountApplied\": {\r\n    \"coupon\" : \"WEL20\",\r\n    \"discountPercentage\" : 30\r\n  },\r\n  \"paymentMethod\": \"Stripe\",\r\n  \"shippingAddress\": {\r\n    \"street\": \"123 Main St\",\r\n    \"city\": \"New York\",\r\n    \"postalCode\": \"10001\",\r\n    \"country\": \"USA\",\r\n    \"phoneNumber\": \"123-456-7890\"\r\n  },\r\n  \"isGift\": false\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/books/List-Books?title=Clean_Code",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"books",
+								"List-Books"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Clean_Code"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZmU0NTQwODRkMTczMzdiMGJkZjI2ZSIsInJvbGUiOiJwdWJsaXNoZXIiLCJuYW1lIjoiQWJkZWxyYWhtYW4gU2FsYWgiLCJpYXQiOjE3NjE3MjUxOTUsImV4cCI6MTc2MTgxMTU5NSwianRpIjoiZ3BPZnZ5dndrX09OekZZMHNsUkFOIn0.-06dwSXSeybSVamQIkCxXp5gwsyM5Q8sIoNw_u0j23o",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Demo Book 10\",\r\n  \"author\": \"Author 10\",\r\n  \"description\": \"This is demo book number 10, covering advanced JavaScript concepts and modern development practices.\",\r\n  \"Edition\": \"2nd\",\r\n  \"categoryName\": \"Programming\",\r\n  \"price\": 200,\r\n  \"discount\": 10,\r\n  \"cost\": 160,\r\n  \"stock\": 25,\r\n  \"noOfPages\": 320,\r\n  \"status\": \"in stock\",\r\n  \"publisher\": \"68effde815c269834696a65c\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/books/Create-Book",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"books",
+								"Create-Book"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "genres",
+			"item": [
+				{
+					"name": "get all genres",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"book\": \"{{book1Id}}\",\r\n      \"quantity\": 2,\r\n      \"price\": 10.99,\r\n      \"type\": \"Physical\"\r\n    },\r\n    {\r\n      \"book\": \"{{book2Id}}\",\r\n      \"quantity\": 1,\r\n      \"price\": 5.99,\r\n      \"type\": \"Ebook\"\r\n    }\r\n  ],\r\n  \"discountApplied\": {\r\n    \"coupon\" : \"WEL20\",\r\n    \"discountPercentage\" : 30\r\n  },\r\n  \"paymentMethod\": \"Stripe\",\r\n  \"shippingAddress\": {\r\n    \"street\": \"123 Main St\",\r\n    \"city\": \"New York\",\r\n    \"postalCode\": \"10001\",\r\n    \"country\": \"USA\",\r\n    \"phoneNumber\": \"123-456-7890\"\r\n  },\r\n  \"isGift\": false\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/genres",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"genres"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN12}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN12",
+			"value": ""
+		}
+	]
+}

@@ -1,0 +1,11 @@
+/node_modules
+./env
+.env
+Backend/Ketabi_Website/.env
+.env.local
+backend/.env
+/package-lock.json
+/yarn.lock
+error.log
+/logs
+seeder.js

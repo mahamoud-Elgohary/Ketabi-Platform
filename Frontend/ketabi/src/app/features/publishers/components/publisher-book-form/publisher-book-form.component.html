@@ -1,0 +1,180 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <div class="form-grid">
+    <div class="form-group full-width">
+      <label for="name">Title *</label>
+      <input id="name" type="text" formControlName="name"
+        [class.invalid]="getControl('name')?.invalid && (getControl('name')?.touched || getControl('name')?.dirty)">
+      <div class="error"
+        *ngIf="getControl('name')?.errors && (getControl('name')?.touched || getControl('name')?.dirty)">
+        <span *ngIf="getControl('name')?.errors?.['required']">Title is required.</span>
+        <span *ngIf="getControl('name')?.errors?.['minlength']">Title must be at least 2 characters.</span>
+        <span *ngIf="getControl('name')?.errors?.['maxlength']">Title cannot exceed 100 characters.</span>
+      </div>
+    </div>
+
+    <div class="form-group full-width">
+      <label for="author">Author *</label>
+      <input id="author" type="text" formControlName="author"
+        [class.invalid]="getControl('author')?.invalid && (getControl('author')?.touched || getControl('author')?.dirty)">
+      <div class="error"
+        *ngIf="getControl('author')?.errors && (getControl('author')?.touched || getControl('author')?.dirty)">
+        <span *ngIf="getControl('author')?.errors?.['required']">Author is required.</span>
+        <span *ngIf="getControl('author')?.errors?.['minlength']">Author must be at least 2 characters.</span>
+        <span *ngIf="getControl('author')?.errors?.['maxlength']">Author cannot exceed 100 characters.</span>
+      </div>
+    </div>
+
+    <div class="form-group full-width">
+      <label for="edition">Edition *</label>
+      <input id="edition" type="text" formControlName="Edition"
+        [class.invalid]="getControl('Edition')?.invalid && (getControl('Edition')?.touched || getControl('Edition')?.dirty)">
+      <div class="error"
+        *ngIf="getControl('Edition')?.errors && (getControl('Edition')?.touched || getControl('Edition')?.dirty)">
+        <span *ngIf="getControl('Edition')?.errors?.['required']">Edition is required.</span>
+        <span *ngIf="getControl('Edition')?.errors?.['maxlength']">Edition cannot exceed 50 characters.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="genre">Genre *</label>
+      <select id="genre" formControlName="genre_id"
+        [class.invalid]="getControl('genre_id')?.invalid && (getControl('genre_id')?.touched || getControl('genre_id')?.dirty)">
+        <option value="" disabled>Select genre</option>
+        <option *ngFor="let genre of genres" [value]="genre._id">{{ genre.name }}</option>
+      </select>
+      <div class="error"
+        *ngIf="getControl('genre_id')?.errors && (getControl('genre_id')?.touched || getControl('genre_id')?.dirty)">
+        <span>Genre is required.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="language">Language *</label>
+      <select id="language" formControlName="bookLanguage">
+        <option *ngFor="let option of languageOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="age">Recommended Age *</label>
+      <select id="age" formControlName="recommendedAge">
+        <option *ngFor="let option of recommendedAgeOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status *</label>
+      <select id="status" formControlName="status">
+        <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price *</label>
+      <input id="price" type="number" min="0" step="0.01" formControlName="price"
+        [class.invalid]="(getControl('price')?.invalid || form.errors?.['priceMustBeGreaterThanCost']) && (getControl('price')?.touched || getControl('price')?.dirty)">
+      <div class="error"
+        *ngIf="getControl('price')?.errors && (getControl('price')?.touched || getControl('price')?.dirty)">
+        <span *ngIf="getControl('price')?.errors?.['required']">Price is required.</span>
+        <span *ngIf="getControl('price')?.errors?.['min']">Price cannot be negative.</span>
+      </div>
+      <div class="error" *ngIf="form.errors?.['priceMustBeGreaterThanCost'] && (form.touched || form.dirty)">
+        <span>Price must be greater than cost.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="discount">Discount (%)</label>
+      <input id="discount" type="number" min="0" max="100" step="1" formControlName="discount"
+        [class.invalid]="getControl('discount')?.invalid && (getControl('discount')?.touched || getControl('discount')?.dirty)">
+      <div class="error"
+        *ngIf="getControl('discount')?.errors && (getControl('discount')?.touched || getControl('discount')?.dirty)">
+        <span *ngIf="getControl('discount')?.errors?.['min']">Discount cannot be negative.</span>
+        <span *ngIf="getControl('discount')?.errors?.['max']">Discount cannot exceed 100%.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="cost">Cost *</label>
+      <input id="cost" type="number" min="0" step="0.01" formControlName="cost"
+        [class.invalid]="(getControl('cost')?.invalid || form.errors?.['priceMustBeGreaterThanCost']) && (getControl('cost')?.touched || getControl('cost')?.dirty)">
+      <div class="error"
+        *ngIf="getControl('cost')?.errors && (getControl('cost')?.touched || getControl('cost')?.dirty)">
+        <span *ngIf="getControl('cost')?.errors?.['required']">Cost is required.</span>
+        <span *ngIf="getControl('cost')?.errors?.['min']">Cost cannot be negative.</span>
+      </div>
+      <div class="error" *ngIf="form.errors?.['priceMustBeGreaterThanCost'] && (form.touched || form.dirty)">
+        <span>Price must be greater than cost.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="stock">Stock *</label>
+      <input id="stock" type="number" min="0" step="1" formControlName="stock"
+        [class.invalid]="getControl('stock')?.invalid && (getControl('stock')?.touched || getControl('stock')?.dirty)">
+      <div class="error"
+        *ngIf="getControl('stock')?.errors && (getControl('stock')?.touched || getControl('stock')?.dirty)">
+        <span *ngIf="getControl('stock')?.errors?.['required']">Stock is required.</span>
+        <span *ngIf="getControl('stock')?.errors?.['min']">Stock cannot be negative.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="pages">Number of Pages *</label>
+      <input id="pages" type="number" min="1" step="1" formControlName="noOfPages"
+        [class.invalid]="getControl('noOfPages')?.invalid && (getControl('noOfPages')?.touched || getControl('noOfPages')?.dirty)">
+      <div class="error"
+        *ngIf="getControl('noOfPages')?.errors && (getControl('noOfPages')?.touched || getControl('noOfPages')?.dirty)">
+        <span *ngIf="getControl('noOfPages')?.errors?.['required']">Number of pages is required.</span>
+        <span *ngIf="getControl('noOfPages')?.errors?.['min']">Number of pages must be at least 1.</span>
+      </div>
+    </div>
+
+    <div class="form-group full-width">
+      <label for="description">Description</label>
+      <textarea id="description" rows="4" formControlName="description"
+        [class.invalid]="getControl('description')?.invalid && (getControl('description')?.touched || getControl('description')?.dirty)"></textarea>
+      <div class="error"
+        *ngIf="getControl('description')?.errors && (getControl('description')?.touched || getControl('description')?.dirty)">
+        <span *ngIf="getControl('description')?.errors?.['maxlength']">Description cannot exceed 1000 characters.</span>
+      </div>
+    </div>
+
+    <div class="form-group full-width">
+      <label for="imageUrl">Cover Image URL</label>
+      <input id="imageUrl" type="url" placeholder="https://example.com/cover.jpg" formControlName="imageUrl"
+        [class.invalid]="getControl('imageUrl')?.invalid && (getControl('imageUrl')?.touched || getControl('imageUrl')?.dirty)">
+      <div class="error"
+        *ngIf="getControl('imageUrl')?.errors && (getControl('imageUrl')?.touched || getControl('imageUrl')?.dirty)">
+        <span *ngIf="getControl('imageUrl')?.errors?.['pattern']">
+          Please enter a valid URL that starts with http:// or https://
+        </span>
+      </div>
+      <div class="image-preview" *ngIf="form.get('imageUrl')?.value">
+        <span>Preview:</span>
+        <img [src]="form.get('imageUrl')?.value" alt="Book cover preview" />
+      </div>
+    </div>
+
+    <div class="form-group full-width">
+      <label for="pdf">PDF (optional)</label>
+      <div class="file-input-wrapper">
+        <input id="pdf" type="file" accept="application/pdf" (change)="onFileSelected($event)">
+        <span class="file-name" *ngIf="selectedFileName">Selected: {{ selectedFileName }}</span>
+        <span class="file-name" *ngIf="!selectedFileName">No file chosen</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-errors" *ngIf="validationMessages.length">
+    <p *ngFor="let message of validationMessages">{{ message }}</p>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="submitting">Cancel</button>
+    <button type="submit" class="btn-primary" [disabled]="submitting || form.invalid">
+      <span *ngIf="!submitting">{{ mode === 'create' ? 'Create Book' : 'Update Book' }}</span>
+      <span *ngIf="submitting">Saving...</span>
+    </button>
+  </div>
+</form>

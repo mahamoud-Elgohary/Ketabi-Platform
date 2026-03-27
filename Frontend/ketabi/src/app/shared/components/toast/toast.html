@@ -1,0 +1,8 @@
+<div class="toast-container">
+  <div *ngFor="let toast of toasts" class="toast-message" [ngClass]="toast.type">
+    <i *ngIf="toast.type === 'success'" class="fa fa-check-circle"></i>
+    <i *ngIf="toast.type === 'error'" class="fa fa-times-circle"></i>
+    <i *ngIf="toast.type === 'info'" class="fa fa-info-circle"></i>
+    <span>{{ toast.message }}</span>
+  </div>
+</div>

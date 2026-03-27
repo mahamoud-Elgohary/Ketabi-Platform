@@ -1,0 +1,153 @@
+<section class="order-success-container">
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner">
+      <i class="fa-solid fa-spinner fa-spin fa-3x"></i>
+    </div>
+    <p>Loading your order details...</p>
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div *ngIf="!loading && order?.paymentStatus === 'Completed'" class="success-card">
+
+    <div class="success-icon">
+      <i class="fa-solid fa-check-circle"></i>
+    </div>
+
+    <h1>Payment Successful! 🎉</h1>
+    <p class="subtitle">Thank you for your purchase!</p>
+
+    <!-- Order Details -->
+    <div class="order-details">
+
+      <div class="detail-row">
+        <span class="label">Order ID:</span>
+        <span class="value">#{{ order.orderNumber }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Amount Paid:</span>
+        <span class="value amount">{{ order.finalPrice | currency:'EGP' }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Items:</span>
+        <span class="value">{{ order.items?.length }} item(s)</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Status:</span>
+        <span class="value status-badge paid">{{ order.paymentStatus }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Order Progress:</span>
+        <span class="value status-badge">{{ order.orderStatus }}</span>
+      </div>
+
+      <!-- Optional Coupon -->
+      <div class="detail-row" *ngIf="order.coupon && order.coupon !== 'No Coupon'">
+        <span class="label">Coupon:</span>
+        <span class="value">{{ order.coupon }} ({{ order.discountApplied }} EGP off)</span>
+      </div>
+    </div>
+
+    <!-- Extra Messages -->
+    <div class="message">
+      <p>A confirmation email has been sent to {{ order.userEmail }}.</p>
+
+      <p *ngIf="hasEbooks">
+        📱 Your e-books are now available in your library!
+      </p>
+
+      <p *ngIf="hasPhysical">
+        📦 Your physical books will be shipped soon.
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button (click)="goToDashboard()" class="btn btn-primary">
+        <i class="fa-solid fa-house"></i> Go to Dashboard
+      </button>
+      <a routerLink="/shop" class="btn btn-secondary">
+        <i class="fa-solid fa-shopping-bag"></i> Continue Shopping
+      </a>
+    </div>
+  </div>
+
+  <!-- FAILED PAYMENT -->
+  <div *ngIf="!loading && order?.paymentStatus === 'Failed'" class="error-card">
+
+    <div class="error-icon">
+      <i class="fa-solid fa-times-circle"></i>
+    </div>
+
+    <h1>Payment Failed ❌</h1>
+    <p class="subtitle">Your payment could not be completed</p>
+
+    <div class="error-message">
+      {{'Transaction was declined. Please try again.' }}
+    </div>
+
+    <div class="order-info">
+      <p>Order ID: <strong>#{{ orderId }}</strong></p>
+    </div>
+
+    <div class="action-buttons">
+      <button (click)="retryPayment()" class="btn btn-primary">
+        <i class="fa-solid fa-redo"></i> Try Again
+      </button>
+      <a routerLink="/cart" class="btn btn-secondary">
+        <i class="fa-solid fa-shopping-cart"></i> Back to Cart
+      </a>
+    </div>
+  </div>
+
+  <!-- EXPIRED PAYMENT -->
+  <div *ngIf="!loading && order?.paymentStatus === 'Expired'" class="error-card">
+
+    <div class="error-icon">
+      <i class="fa-solid fa-clock"></i>
+    </div>
+
+    <h1>Payment Expired ⏳</h1>
+    <p class="subtitle">The payment window has expired.</p>
+
+    <div class="order-info">
+      <p>Order ID: <strong>#{{ orderId }}</strong></p>
+    </div>
+
+    <div class="action-buttons">
+      <button (click)="retryPayment()" class="btn btn-primary">
+        <i class="fa-solid fa-redo"></i> Retry Payment
+      </button>
+
+      <a routerLink="/cart" class="btn btn-secondary">
+        <i class="fa-solid fa-shopping-cart"></i> Back to Cart
+      </a>
+    </div>
+  </div>
+
+  <!-- STILL PROCESSING (PAID BUT NOT CONFIRMED YET) -->
+  <div *ngIf="!loading && order?.paymentStatus === 'Pending'" class="info-card">
+
+    <div class="info-icon">
+      <i class="fa-solid fa-hourglass-half"></i>
+    </div>
+
+    <h1>Payment Pending...</h1>
+    <p class="subtitle">We are waiting for confirmation from the payment gateway.</p>
+
+    <div class="order-info">
+      <p>Order ID: <strong>#{{ orderId }}</strong></p>
+      <p>Status: <strong>{{ order.orderStatus }}</strong></p>
+    </div>
+
+    <p class="info-text">
+      This may take up to a few minutes. You can refresh the page.
+    </p>
+  </div>
+
+</section>

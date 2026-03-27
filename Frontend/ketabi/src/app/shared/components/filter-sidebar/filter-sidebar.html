@@ -1,0 +1,81 @@
+<div class="filter-sidebar">
+  <div class="filter-header">
+    <h3>Filters</h3>
+    <button class="reset-btn" (click)="resetFilters()">
+      <i class="fas fa-redo"></i> Reset
+    </button>
+  </div>
+
+  <!-- Language Filter -->
+  <div class="filter-section">
+    <h4>Language</h4>
+    <div class="filter-options">
+      <label *ngFor="let lang of languages">
+        <input type="radio" name="language" [value]="lang" [(ngModel)]="filters.language" (change)="onFilterChange()" />
+        <span>{{ lang }}</span>
+      </label>
+      <label>
+        <input type="radio" name="language" [value]="''" [(ngModel)]="filters.language" (change)="onFilterChange()" />
+        <span>All</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Age Filter -->
+  <div class="filter-section">
+    <h4>Age Group</h4>
+    <div class="filter-options">
+      <label *ngFor="let age of ages">
+        <input type="radio" name="age" [value]="age" [(ngModel)]="filters.age" (change)="onFilterChange()" />
+        <span>{{ age }}</span>
+      </label>
+      <label>
+        <input type="radio" name="age" [value]="''" [(ngModel)]="filters.age" (change)="onFilterChange()" />
+        <span>All</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Genre Filter -->
+  <div class="filter-section">
+    <h4>Genre</h4>
+    <div class="filter-options">
+      <label *ngFor="let genre of genres">
+        <input type="radio" name="genre" [value]="genre._id" [(ngModel)]="filters.genre" (change)="onFilterChange()" />
+        <span>{{ genre.name }}</span>
+      </label>
+      <label>
+        <input type="radio" name="genre" [value]="''" [(ngModel)]="filters.genre" (change)="onFilterChange()" />
+        <span>All</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Price Filter -->
+  <div class="filter-section">
+    <h4>Price</h4>
+    <div class="price-range">
+      <label>
+        Min: {{ filters.minPrice }}
+        <input type="range" [min]="priceRange.min" [max]="priceRange.max" [(ngModel)]="filters.minPrice"
+          (change)="onFilterChange()" />
+      </label>
+      <label>
+        Max: {{ filters.maxPrice }}
+        <input type="range" [min]="priceRange.min" [max]="priceRange.max" [(ngModel)]="filters.maxPrice"
+          (change)="onFilterChange()" />
+      </label>
+    </div>
+  </div>
+
+  <!-- Sort -->
+  <div class="filter-section">
+    <h4>Sort By</h4>
+    <select [(ngModel)]="filters.sort" (change)="onFilterChange()" class="sort-select">
+      <option value="-createdAt">Newest</option>
+      <option value="price">Price (Low to High)</option>
+      <option value="-price">Price (High to Low)</option>
+      <option value="-avgRating">Rating</option>
+    </select>
+  </div>
+</div>

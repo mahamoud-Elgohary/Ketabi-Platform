@@ -1,0 +1,40 @@
+<div class="pagination-wrapper" *ngIf="totalPages > 1">
+  <!-- Previous Button -->
+  <button class="pagination-btn btn-prev" (click)="previousPage()" [disabled]="currentPage === 0" title="Previous page">
+    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+    Previous
+  </button>
+
+  <!-- First Page Button -->
+  <button *ngIf="pages[0] !== 0" class="pagination-btn page-number" (click)="firstPage()" title="First page">
+    1
+  </button>
+
+  <!-- Dots if there's gap -->
+  <span *ngIf="pages[0] !== 0 && pages[0] !== 1" class="pagination-dots">...</span>
+
+  <!-- Page Numbers -->
+  <button *ngFor="let page of pages" class="pagination-btn page-number" [class.active]="page === currentPage"
+    (click)="goToPage(page)" [title]="'Page ' + (page + 1)">
+    {{ page + 1 }}
+  </button>
+
+  <!-- Dots if there's gap -->
+  <span *ngIf="pages[pages.length - 1] !== totalPages - 1 && pages[pages.length - 1] !== totalPages - 2"
+    class="pagination-dots">
+    ...
+  </span>
+
+  <!-- Last Page Button -->
+  <button *ngIf="pages[pages.length - 1] !== totalPages - 1" class="pagination-btn page-number" (click)="lastPage()"
+    [title]="'Page ' + totalPages">
+    {{ totalPages }}
+  </button>
+
+  <!-- Next Button -->
+  <button class="pagination-btn btn-next" (click)="nextPage()" [disabled]="currentPage === totalPages - 1"
+    title="Next page">
+    Next
+    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+  </button>
+</div>

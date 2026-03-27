@@ -1,0 +1,250 @@
+<div class="book-details-container" *ngIf="!isLoading && book as selectedBook">
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading book details...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="errorMessage && !isLoading">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <!-- Book Details Content -->
+  <div class="book-details-content">
+    <!-- Main Book Section -->
+    <div class="book-main-section">
+      <!-- Book Image -->
+      <div class="book-image-container">
+        <img [src]="selectedBook.image?.url || 'default-book.jpg'" [alt]="selectedBook.name" class="book-image" />
+        <!-- Discount Badge -->
+        <div class="discount-badge" *ngIf="selectedBook.discount && (selectedBook.discount || 0) > 0">
+          -{{ selectedBook.discount }}%
+        </div>
+        <!-- Stock Badge -->
+        <div class="stock-badge" [class.in-stock]="selectedBook.status === 'in stock'"
+          [class.out-of-stock]="selectedBook.status === 'out of stock'">
+          {{ selectedBook.status === 'in stock' ? 'In Stock' : 'Out of Stock' }}
+        </div>
+      </div>
+
+      <!-- Book Info -->
+      <div class="book-info-section">
+        <h1 class="book-title">{{ selectedBook.name }}</h1>
+        <p class="book-author">by <span>{{ selectedBook.author }}</span></p>
+
+        <!-- Rating -->
+        <div class="book-rating" *ngIf="selectedBook.avgRating !== undefined">
+          <div class="stars">
+            <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]"
+              [class.filled]="star <= Math.round(selectedBook.avgRating || 0)"></i>
+          </div>
+          <span class="rating-value">{{ (selectedBook.avgRating || 0).toFixed(1) }}</span>
+          <span class="rating-count" *ngIf="selectedBook.ratingsCount">({{ selectedBook.ratingsCount }} reviews)</span>
+        </div>
+
+        <!-- Price Section -->
+        <div class="price-section">
+          <div class="price-container" *ngIf="selectedBook.discount && (selectedBook.discount || 0) > 0">
+            <span class="original-price">{{ selectedBook.price | currency : 'EGP' : 'symbol' : '1.0-0' }}</span>
+            <span class="final-price">{{ ((selectedBook.price || 0) * (1 - ((selectedBook.discount || 0) / 100))) |
+              currency : 'EGP' : 'symbol' : '1.0-0' }}</span>
+          </div>
+          <div class="price-container" *ngIf="!selectedBook.discount || (selectedBook.discount || 0) === 0">
+            <span class="final-price">{{ selectedBook.price | currency : 'EGP' : 'symbol' : '1.0-0' }}</span>
+          </div>
+        </div>
+
+        <!-- Book Meta Info -->
+        <div class="book-meta">
+          <div class="meta-item" *ngIf="selectedBook.genre">
+            <i class="fas fa-book"></i>
+            <span><strong>Genre:</strong> {{ selectedBook.genre.name }}</span>
+          </div>
+          <div class="meta-item" *ngIf="selectedBook.bookLanguage">
+            <i class="fas fa-language"></i>
+            <span><strong>Language:</strong> {{ selectedBook.bookLanguage | titlecase }}</span>
+          </div>
+          <div class="meta-item" *ngIf="selectedBook.recommendedAge">
+            <i class="fas fa-users"></i>
+            <span><strong>Age:</strong> {{ selectedBook.recommendedAge | titlecase }}</span>
+          </div>
+          <div class="meta-item" *ngIf="selectedBook.noOfPages">
+            <i class="fas fa-file-alt"></i>
+            <span><strong>Pages:</strong> {{ selectedBook.noOfPages }}</span>
+          </div>
+          <div class="meta-item" *ngIf="selectedBook.stock !== undefined">
+            <i class="fas fa-box"></i>
+            <span><strong>Stock:</strong> {{ selectedBook.stock }} available</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-add-cart" [disabled]="selectedBook.status !== 'in stock'" (click)="addToCart()">
+            <i class="fas fa-shopping-cart"></i>
+            Add to Cart
+          </button>
+          <button class="btn btn-wishlist" (click)="toggleWishlist()" [class.active]="isInWishlist">
+            <i class="fas" [class.fa-heart]="isInWishlist" [class.fa-heart-o]="!isInWishlist"></i>
+            {{ isInWishlist ? 'Remove from' : 'Add to' }} Wishlist
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="book-description-section">
+      <h2 class="section-title">
+        <i class="fas fa-align-left"></i>
+        Description
+      </h2>
+      <div class="description-content">
+        <p>{{ selectedBook.description }}</p>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="book-review-section">
+      <div class="review-section-header">
+        <div>
+          <h2 class="section-title">
+            <i class="fas fa-comments"></i>
+            Reviews & Ratings
+          </h2>
+          <p class="section-subtitle">
+            {{ selectedBook.ratingsCount || 0 }} review{{ (selectedBook.ratingsCount || 0) === 1 ? '' : 's' }} ·
+            Average {{ (selectedBook.avgRating || 0).toFixed(1) }} / 5
+          </p>
+        </div>
+        <div class="review-sort">
+          <button class="sort-btn" [class.active]="reviewSort === 'new'" (click)="changeReviewSort('new')">
+            Newest
+          </button>
+          <button class="sort-btn" [class.active]="reviewSort === 'top'" (click)="changeReviewSort('top')">
+            Top Rated
+          </button>
+        </div>
+      </div>
+
+      <!-- Review Form -->
+      <div class="review-form-container">
+        <ng-container *ngIf="isAuthenticated; else reviewLoginPrompt">
+          <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="review-form">
+            <div class="review-field rating-field">
+              <label for="rating">Rating</label>
+              <div class="rating-options">
+                <button type="button" *ngFor="let star of stars" [class.filled]="star <= reviewForm.value.rating"
+                  (click)="reviewForm.patchValue({ rating: star })">
+                  <i class="fas fa-star"></i>
+                </button>
+              </div>
+              <div class="error" *ngIf="reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched">
+                Rating is required.
+              </div>
+            </div>
+
+            <div class="review-field">
+              <label for="title">Title</label>
+              <input id="title" type="text" placeholder="Summarize your experience" formControlName="title"
+                maxlength="120" />
+              <div class="error" *ngIf="reviewForm.get('title')?.errors?.['maxlength']">
+                Title cannot exceed 120 characters.
+              </div>
+            </div>
+
+            <div class="review-field">
+              <label for="body">Details</label>
+              <textarea id="body" rows="4" placeholder="Share what you liked or disliked" formControlName="body"
+                maxlength="5000"></textarea>
+              <div class="error" *ngIf="reviewForm.get('body')?.errors?.['maxlength']">
+                Review cannot exceed 5000 characters.
+              </div>
+            </div>
+
+            <div class="review-form-actions">
+              <button class="btn btn-primary" type="submit" [disabled]="isSubmittingReview">
+                {{ isEditingReview ? 'Update Review' : 'Submit Review' }}
+              </button>
+              <button type="button" class="btn btn-secondary" *ngIf="isEditingReview" (click)="cancelEditing()">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </ng-container>
+        <ng-template #reviewLoginPrompt>
+          <div class="login-prompt">
+            <i class="fas fa-lock"></i>
+            <p>Please sign in to write a review.</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Reviews List -->
+      <div class="reviews-list">
+        <div class="reviews-loading" *ngIf="reviewsLoading">
+          <div class="spinner small"></div>
+          <p>Loading reviews...</p>
+        </div>
+
+        <div class="reviews-error" *ngIf="reviewError && !reviewsLoading">
+          <i class="fas fa-exclamation-circle"></i>
+          <p>{{ reviewError }}</p>
+        </div>
+
+        <div class="reviews-empty" *ngIf="!reviewsLoading && !reviewError && reviews.length === 0">
+          <p>No reviews yet. Be the first to share your thoughts!</p>
+        </div>
+
+        <article class="review-card" *ngFor="let review of reviews; trackBy: trackByReview">
+          <header class="review-card-header">
+            <div class="review-author">
+              <div class="avatar">
+                {{ (review.user?.name || 'Reader') | slice:0:1 }}
+              </div>
+              <div>
+                <p class="name">{{ review.user?.name || 'Reader' }}</p>
+                <p class="date">{{ review.createdAt | date: 'mediumDate' }}</p>
+              </div>
+            </div>
+            <div class="review-actions" *ngIf="canManageReview(review)">
+              <ng-container *ngIf="pendingDeleteReviewId !== review._id; else confirmDeleteTpl">
+                <button class="link-btn" (click)="startEditing(review)">Edit</button>
+                <button class="link-btn danger" (click)="promptDelete(review)">Delete</button>
+              </ng-container>
+              <ng-template #confirmDeleteTpl>
+                <div class="delete-confirm">
+                  <span>Delete this review?</span>
+                  <button class="link-btn danger" (click)="confirmDelete()">Delete</button>
+                  <button class="link-btn" (click)="cancelDelete()">Cancel</button>
+                </div>
+              </ng-template>
+            </div>
+          </header>
+
+          <div class="review-rating">
+            <i class="fas fa-star" *ngFor="let star of stars" [class.filled]="star <= review.rating"></i>
+            <span>{{ review.rating }}/5</span>
+          </div>
+
+          <h4 class="review-title" *ngIf="review.title">{{ review.title }}</h4>
+          <p class="review-body" *ngIf="review.body">{{ review.body }}</p>
+        </article>
+      </div>
+
+      <!-- Pagination -->
+      <div class="review-pagination" *ngIf="reviewPagination.pages > 1 && !reviewsLoading && !reviewError">
+        <button class="btn btn-secondary" (click)="goToReviewPage(reviewPagination.page - 1)"
+          [disabled]="reviewPagination.page === 1">
+          Previous
+        </button>
+        <span>Page {{ reviewPagination.page }} of {{ reviewPagination.pages }}</span>
+        <button class="btn btn-secondary" (click)="goToReviewPage(reviewPagination.page + 1)"
+          [disabled]="reviewPagination.page === reviewPagination.pages">
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

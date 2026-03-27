@@ -1,0 +1,240 @@
+<nav class="navbar navbar-expand-lg navbar-custom">
+  <div class="container-fluid px-5">
+    <!-- Logo -->
+    <a class="navbar-brand" routerLink="/">
+      <img src="images/logo.png" alt="Ketabi Logo" class="navbar-logo" />
+    </a>
+
+    <!-- Toggle Button for Mobile -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navigation Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav m-auto align-items-center">
+        <!-- Home Link -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
+        </li>
+
+        <!-- Shop Link -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/shop" routerLinkActive="active">Shop</a>
+        </li>
+
+        <!-- About Link -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/about" routerLinkActive="active">About</a>
+        </li>
+
+        <!-- Contact Button -->
+        <li class="nav-item">
+          <button class="btn btn-contact" routerLink="/contact">Contact</button>
+        </li>
+      </ul>
+
+      <!-- Icons on the Right -->
+      <ul class="navbar-nav align-items-center">
+        <!-- Search Bar -->
+        <div class="navbar-search-inline mx-3">
+          <app-search-bar></app-search-bar>
+        </div>
+
+        <!-- Notification Bell Icon -->
+        <li class="nav-item position-relative">
+          <a
+            (click)="notificationsClicked()"
+            class="icon-link notification-bell"
+            title="Notifications"
+            style="cursor: pointer"
+          >
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" *ngIf="notificationCount > 0">
+              {{ notificationCount > 99 ? '99+' : notificationCount }}
+            </span>
+          </a>
+
+          <!-- Notification Dropdown -->
+          <div *ngIf="showNotifications" class="notification-dropdown">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <button *ngIf="notifications.length > 0" (click)="clearAllNotifications()">
+                Clear All
+              </button>
+            </div>
+
+            <div class="notification-list">
+              <div *ngIf="notifications.length === 0" class="no-notifications">
+                <p>No notifications yet</p>
+              </div>
+
+              <div
+                *ngFor="let notif of notifications"
+                class="notification-item"
+                [ngClass]="getNotificationClass(notif.type || '')"
+              >
+                <!-- Notification Icon -->
+                <div class="notification-icon">
+                  <span *ngIf="notif.type === 'PRICE_DROP'">💰</span>
+                  <span *ngIf="notif.type === 'BOOK_BACK_IN_STOCK'">📦</span>
+                  <span *ngIf="notif.type === 'LOW_STOCK'">⚠️</span>
+                  <span *ngIf="notif.type === 'ORDER_CONFIRMED'">✅</span>
+                  <span *ngIf="notif.type === 'ORDER_SHIPPED'">🚚</span>
+                </div>
+
+                <!-- Notification Content -->
+                <div class="notification-content">
+                  <div class="notification-title">{{ notif.title }}</div>
+                  <div class="notification-message">{{ notif.content }}</div>
+
+                  <!-- Book Details (if available) -->
+                  <div *ngIf="notif.data" class="notification-details">
+                    <div *ngIf="notif.data.bookName" class="book-info">
+                      <img
+                        *ngIf="notif.data.coverImage"
+                        [src]="notif.data.coverImage"
+                        [alt]="notif.data.bookName"
+                        class="book-thumbnail"
+                      />
+                      <div class="book-text">
+                        <div class="book-name">{{ notif.data.bookName }}</div>
+                        <div *ngIf="notif.data.author" class="book-author">
+                          by {{ notif.data.author }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Price Drop Details -->
+                    <div *ngIf="notif.type === 'PRICE_DROP'" class="price-info">
+                      <span class="old-price">{{ notif.data.oldPrice }} EGP</span>
+                      <span class="arrow">→</span>
+                      <span class="new-price">{{ notif.data.newPrice }} EGP</span>
+                      <span class="discount-badge">-{{ notif.data.discountPercentage }}%</span>
+                    </div>
+
+                    <!-- Stock Info -->
+                    <div *ngIf="notif.type === 'LOW_STOCK'" class="stock-info">
+                      Only {{ notif.data.stock }} left in stock!
+                    </div>
+
+                    <!-- Action Button -->
+                    <button
+                      *ngIf="notif.data.bookId"
+                      (click)="viewBook(notif.data.bookId)"
+                      class="view-book-btn"
+                    >
+                      View Book
+                    </button>
+                  </div>
+
+                  <div class="notification-time">
+                    {{ notif.createdAt ? formatTime(notif.createdAt) : '' }}
+                  </div>
+                </div>
+
+                <!-- Delete Button -->
+                <button
+                  class="delete-notification"
+                  (click)="deleteNotification(notif)"
+                  title="Dismiss"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Cart Icon -->
+        <li class="nav-item">
+          <a routerLink="/cart" class="icon-link cart-icon" title="Shopping Cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" *ngIf="cartCount$ | async as count">{{ count }}</span>
+          </a>
+        </li>
+
+        @if(!isLoggedIn) {
+        <!-- Login Link -->
+        <li class="nav-item">
+          <a routerLink="/auth/login" class="nav-link auth-link" title="Login">Login</a>
+        </li>
+
+        <!-- Register Link -->
+        <li class="nav-item">
+          <a routerLink="/auth/register" class="nav-link auth-link" title="Register">Register</a>
+        </li>
+        } @else {
+        <!-- User Profile Icon with Dropdown -->
+        <li class="nav-item dropdown">
+          <a
+            class="icon-link profile-icon dropdown-toggle"
+            href="#"
+            id="profileDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            title="User Profile"
+          >
+            @if(currentUser?.avatar?.url) {
+            <img [src]="currentUser.avatar.url" alt="Profile" class="profile-avatar" />
+            } @else {
+            <i class="fas fa-user"></i>
+            }
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <!-- User Info Header -->
+            @if(currentUser) {
+            <li class="dropdown-header">
+              <div class="user-info">
+                <strong>{{ currentUser.name }}</strong>
+              </div>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            }
+
+            <li>
+              <a class="dropdown-item" routerLink="/profile">
+                <i class="fas fa-user me-2"></i>My Profile
+              </a>
+            </li>
+
+            <li>
+              <a class="dropdown-item" routerLink="/my-library">
+                <i class="fas fa-book me-2"></i>My Library
+              </a>
+            </li>
+
+            <li> 
+              <a class="dropdown-item" (click)="ordersComponentRouter()" routerLink>
+                <i class="fas fa-box me-2"></i>My Orders
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/wishlist">
+                <i class="fas fa-heart me-2"></i>Wishlist
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/settings">
+                <i class="fas fa-cog me-2"></i>Settings
+              </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button class="dropdown-item" (click)="logout()">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </button>
+            </li>
+          </ul>
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+</nav>

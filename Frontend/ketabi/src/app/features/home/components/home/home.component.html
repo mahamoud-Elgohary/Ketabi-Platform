@@ -1,0 +1,76 @@
+<app-hero></app-hero>
+
+<app-chatbot-widget></app-chatbot-widget>
+@if(isLoggedIn) {
+<app-chat></app-chat>
+}
+<!-- Categories Section -->
+<section class="categories-section">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6" *ngFor="let cat of categories">
+        <a (click)="searchByCat()" style="text-decoration: none; cursor: pointer">
+          <app-category-card [icon]="cat.icon" [title]="cat.title"> </app-category-card>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Books Section -->
+<section class="featured-section py-5">
+  <div class="container">
+    <h2 class="section-title text-center mb-5">{{ currentCategoryTitle }}</h2>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Books are being loaded...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+
+    <!-- Books Grid -->
+    <div class="row g-4 mb-5" *ngIf="!loading && !error">
+      <div class="col-lg-3 col-md-6" *ngFor="let book of books; let i = index" [hidden]="i >= 8">
+        <app-book-card
+          [image]="book?.image?.url || 'default-book.jpg'"
+          [title]="book.name"
+          [author]="book.author"
+          [book]="book"
+          [id]="book._id"
+        >
+        </app-book-card>
+      </div>
+    </div>
+
+    <div class="text-center mb-4" *ngIf="!loading && !error && books.length > 7">
+      <button class="btn-more" (click)="ShowAll()">Show More</button>
+    </div>
+
+    <!-- No Books Message -->
+    <div *ngIf="!loading && books.length === 0" class="alert alert-info" role="alert">
+      No books found in this category
+    </div>
+
+    <!-- Newsletter -->
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        <div class="newsletter-card">
+          <h3 class="text-center mb-4">Sign Up for Our Newsletter</h3>
+          <form>
+            <div class="mb-3">
+              <input type="email" class="form-control newsletter-input" placeholder="E-mail" />
+            </div>
+            <button type="submit" class="btn btn-newsletter w-100">Follow Us</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

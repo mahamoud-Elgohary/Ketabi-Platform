@@ -1,0 +1,128 @@
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 30px 20px;
+  flex-wrap: wrap;
+}
+
+/* Pagination Button Base */
+.pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #daa520;
+  color: #daa520;
+  background: transparent;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 44px;
+  height: 44px;
+}
+
+/* Hover State */
+.pagination-btn:hover:not(:disabled) {
+  background: #daa520;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.3);
+}
+
+/* Active State */
+.pagination-btn.page-number.active {
+  background: #daa520;
+  color: white;
+  border-color: #daa520;
+  font-weight: 600;
+}
+
+/* Disabled State */
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #ccc;
+  color: #ccc;
+}
+
+/* Previous/Next Buttons */
+.btn-prev,
+.btn-next {
+  font-weight: 600;
+  padding: 10px 16px;
+}
+
+.btn-prev i,
+.btn-next i {
+  font-size: 12px;
+}
+
+/* Page Numbers */
+.page-number {
+  min-width: 42px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+}
+
+/* Dots */
+.pagination-dots {
+  color: #daa520;
+  font-weight: bold;
+  margin: 0 4px;
+  padding: 0 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pagination-wrapper {
+    gap: 6px;
+    padding: 20px 10px;
+  }
+
+  .pagination-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .btn-prev,
+  .btn-next {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .page-number {
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  /* اخفاء النص في الـ Previous و Next على الموبايل */
+  @media (max-width: 576px) {
+    .btn-prev span:first-of-type,
+    .btn-next span:last-of-type {
+      display: none;
+    }
+
+    .pagination-btn {
+      padding: 6px 10px;
+      font-size: 11px;
+      min-width: 36px;
+      height: 36px;
+    }
+
+    .page-number {
+      min-width: 32px;
+      width: 32px;
+      height: 32px;
+      font-size: 11px;
+    }
+  }
+}

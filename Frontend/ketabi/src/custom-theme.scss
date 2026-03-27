@@ -1,0 +1,32 @@
+/* Minimal custom theme placeholder.
+   Replace with your real theme (Angular Material theming, variables, etc.) if needed.
+*/
+
+/* Example CSS variables you can use in your app */
+:root {
+  --app-primary: #1976d2;
+  --app-accent: #e91e63;
+  --app-warn: #f44336;
+  --pickled-bean: #704020;
+  --walnut: #704018;
+  --light-brown: #b08a60;
+  --dark-bg: #e7c29d;
+  --text-light: #f5f3f0;
+  --bg-main: #b08a60;
+  --bg-panel: #2a1f17;
+  --bg-box: #3a2b21;
+  --bg-item: #4a372a;
+  --text-light: #f5f3f0;
+  --text-muted: #d1c7be;
+
+  --accent-gold: #c7a67b;
+  --highlight-green: #2f5f2f;
+  --highlight-green-light: #3f8f3f;
+}
+
+/* Basic fallback styles */
+body {
+  background-color: var(--dark-bg);
+  color: var(--text-light);
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}

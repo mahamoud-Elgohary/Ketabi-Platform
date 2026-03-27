@@ -1,0 +1,33 @@
+.category-card {
+  background: linear-gradient(135deg, #fff8dc, #f5f5dc);
+  border: 2px solid #daa520;
+  height: 141px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: -80px;
+  margin-bottom: -80px;
+}
+
+.category-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(139, 69, 19, 0.2);
+  border-color: #8b4513;
+}
+
+.icon-box {
+  font-size: 3rem;
+}
+
+.card-title {
+  font-family: 'Georgia', serif;
+  color: #8b4513;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.text-muted {
+  color: #6b4423 !important;
+}

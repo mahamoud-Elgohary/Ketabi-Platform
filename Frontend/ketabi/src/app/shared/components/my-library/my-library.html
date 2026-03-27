@@ -1,0 +1,116 @@
+<div class="my-library-container">
+  <div class="library-header">
+    <h1>📚 My Library</h1>
+    <p class="total-books">
+      <span class="badge">Total Books: {{ totalBooks }}</span>
+    </p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Oops!</strong> {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3">Loading your library...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && paginatedBooks.length === 0 && !error" class="text-center py-5">
+    <i class="fas fa-book" style="font-size: 3rem; color: #ccc;"></i>
+    <h3 class="mt-3">Your library is empty</h3>
+    <p>Start shopping to build your collection!</p>
+    <a routerLink="/shop" class="btn btn-primary">Explore Books</a>
+  </div>
+
+  <!-- Books Grid -->
+  <div *ngIf="!isLoading && paginatedBooks.length > 0" class="books-grid">
+    <div *ngFor="let book of paginatedBooks" class="book-card">
+      <!-- Book Cover -->
+      <div class="book-cover">
+             <img [src]="book.image?.url || 'default-book.jpg'" [alt]="book.name" class="book-image" />
+        <!-- PDF Badge -->
+        <span *ngIf="book.pdf?.url" class="pdf-badge">
+          <i class="fas fa-file-pdf"></i> PDF
+        </span>
+      </div>
+
+      <!-- Book Info -->
+      <div class="book-info">
+        <h5 class="book-title">{{ book.name }}</h5>
+        <p class="book-author">by {{ book.author }}</p>
+
+        <!-- Rating -->
+        <div class="rating">
+          <i class="fas fa-star text-warning"></i>
+          <span class="rating-value">
+            {{ book.avgRating.toFixed(1) }}
+            <small>({{ book.ratingsCount }} reviews)</small>
+          </span>
+        </div>
+
+        <!-- Price -->
+        <div class="book-price">
+          <span class="price" *ngIf="book.discount > 0">
+            <strong>${{ (book.price * (1 - book.discount / 100)).toFixed(2) }}</strong>
+            <del class="original-price">${{ book.price }}</del>
+          </span>
+          <span class="price" *ngIf="book.discount === 0">
+            <strong>${{ book.price }}</strong>
+          </span>
+          <span class="discount-badge" *ngIf="book.discount > 0">
+            -{{ book.discount }}%
+          </span>
+        </div>
+
+        <!-- Action Buttons -->
+     <div class="book-actions">
+  <button
+    *ngIf="book.pdf?.url"
+    class="btn btn-sm btn-primary"
+    (click)="downloadBook(book)"
+    [disabled]="isDownloading[book._id]"
+    title="Download PDF"
+  >
+    <i class="fas fa-download"></i>
+    {{ isDownloading[book._id] ? 'Downloading...' : 'Download' }}
+  </button>
+  <button
+    class="btn btn-sm btn-outline-secondary"
+    (click)="viewBookDetails(book._id)"
+    title="View Details"
+  >
+    <i class="fas fa-eye"></i> Details
+  </button>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <nav *ngIf="!isLoading && paginatedBooks.length > 0" class="pagination-container">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="!hasPrevPage">
+        <button class="page-link" (click)="prevPage()" [disabled]="!hasPrevPage">
+          Previous
+        </button>
+      </li>
+
+      <li class="page-item">
+        <span class="page-link">
+          Page {{ currentPage }} of {{ totalPages }}
+        </span>
+      </li>
+
+      <li class="page-item" [class.disabled]="!hasNextPage">
+        <button class="page-link" (click)="nextPage()" [disabled]="!hasNextPage">
+          Next
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>

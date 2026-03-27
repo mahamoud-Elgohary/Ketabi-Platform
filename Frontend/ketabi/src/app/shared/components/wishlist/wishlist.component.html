@@ -1,0 +1,101 @@
+<div class="wishlist-container">
+  <!-- Header -->
+  <header class="wishlist-header">
+    <h1>My Wishlist</h1>
+    <p class="item-count">{{ filteredItems.length }} items</p>
+  </header>
+
+  <!-- Loading State -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading wishlist...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="errorMessage && !loading">
+    <p>{{ errorMessage }}</p>
+    <button class="btn btn-primary" (click)="loadWishlist()">Retry</button>
+  </div>
+
+  <!-- Controls (Search & Filters) -->
+  <div class="controls" *ngIf="!loading && !errorMessage">
+    <div class="search-bar">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="filterItems()"
+        placeholder="Search wishlist..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="filters">
+      <select [(ngModel)]="sortBy" (ngModelChange)="sortItems()" class="filter-select">
+        <option value="date">Sort by Date</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="name">Name</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Wishlist Grid -->
+  <div class="wishlist-grid" *ngIf="!loading && filteredItems.length > 0">
+    <div class="wishlist-card" *ngFor="let item of filteredItems">
+      <button class="remove-btn" (click)="removeItem(item.book._id)" title="Remove from wishlist">
+        ✕
+      </button>
+
+      <div class="card-image">
+        <img [src]="getBookImage(item)" [alt]="item.book.name" />
+        <span class="stock-badge" [class.out-of-stock]="!isBookInStock(item)">
+          {{ isBookInStock(item) ? 'In Stock' : 'Out of Stock' }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <h3 class="item-name">{{ item.book.name }}</h3>
+        <p class="item-author">by {{ item.book.author }}</p>
+
+        <div class="price-section">
+          <p class="item-price">${{ getFinalPrice(item.book).toFixed(2) }}</p>
+          <p class="original-price" *ngIf="item?.book?.discount! > 0">
+            ${{ item.book.price.toFixed(2) }}
+          </p>
+          <span class="discount-badge" *ngIf="item?.book?.discount! > 0">
+            -{{ item.book.discount }}%
+          </span>
+        </div>
+
+        <p class="added-date">Added {{ formatDate(item.addedDate) }}</p>
+
+        <div class="card-actions">
+          <button
+            class="btn btn-primary"
+            [disabled]="!isBookInStock(item)"
+            (click)="addToCart(item)"
+          >
+            Move to Cart
+          </button>
+          <button class="btn btn-secondary" [routerLink]="['/books', item.book._id]">
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && filteredItems.length === 0 && !errorMessage">
+    <div class="empty-icon">♡</div>
+    <h2>
+      {{ searchTerm ? 'No items found' : 'Your wishlist is empty' }}
+    </h2>
+    <p>
+      {{
+        searchTerm ? 'Try adjusting your search or filters' : 'Start adding books to your wishlist!'
+      }}
+    </p>
+    <button class="btn btn-primary" *ngIf="searchTerm">Clear Filters</button>
+  </div>
+</div>

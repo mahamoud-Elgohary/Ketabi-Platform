@@ -1,0 +1,53 @@
+<div class="search-results-container">
+  <div class="container-fluid py-5">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3 col-md-4">
+        <app-filter-sidebar (filtersChanged)="onFiltersChanged($event)"></app-filter-sidebar>
+      </div>
+
+      <!-- Results -->
+      <div class="col-lg-9 col-md-8">
+        <!-- Search Header -->
+        <div class="search-header mb-4">
+          <h2>Search results for: <span class="search-term">"{{ searchQuery }}"</span></h2>
+          <p class="results-count" *ngIf="!loading">
+            Found <strong>{{ totalResults }}</strong> results
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Searching...</span>
+          </div>
+          <p class="mt-3">Searching...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="error && !loading" class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
+
+        <!-- Results Grid -->
+        <div class="row g-4" *ngIf="!loading && !error && books.length > 0">
+          <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let book of books">
+            <app-book-card  [book]="book" [image]="book.image?.url || 'default-book.jpg'" [title]="book.name" [id]="book._id"
+              [author]="book.author" [price]="book.finalPrice || book.price" [rating]="book.avgRating"></app-book-card>
+          </div>
+        </div>
+
+        <!-- No Results -->
+        <div *ngIf="!loading && books.length === 0" class="no-results text-center py-5">
+          <i class="fas fa-search fa-3x mb-3 text-muted" aria-hidden="true"></i>
+          <h3>No results found</h3>
+          <p>Try different search terms or change filters</p>
+        </div>
+
+
+        <app-pagination *ngIf="!loading && books.length > 0" [totalItems]="totalResults" [pageSize]="pageSize"
+          [currentPage]="currentPage" [maxPagesToShow]="5" (pageChanged)="onPageChanged($event)"></app-pagination>
+      </div>
+    </div>
+  </div>
+</div>

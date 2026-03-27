@@ -1,0 +1,177 @@
+/* Theme colors */
+:root {
+  --pickled-bean: #704020;
+  --walnut: #704018;
+  --light-brown: #b08a60;
+  --dark-bg: #1e1a16;
+  --text-light: #f5f3f0;
+}
+
+/* Cart container */
+.cart-container {
+  background-color: var(--dark-bg);
+  color: var(--text-light);
+  border-radius: 12px;
+}
+
+/* Cart items grid */
+.cart-items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: flex-start; /* centered instead of flex-start */
+}
+
+/* Individual cart item (book card) */
+.cart-item {
+  background: var(--pickled-bean);
+  width: 180px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cart-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+/* Book image */
+.cart-item-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border: 1px solid var(--walnut);
+}
+
+/* Price display */
+.price {
+  font-size: 0.875rem;
+}
+
+/* Quantity controls */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  background: var(--dark-bg);
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+.qty-btn {
+  background: var(--light-brown);
+  border: none;
+  color: white;
+  font-size: 0.85rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.qty-number {
+  width: 28px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* Action buttons: change type, remove */
+.btn-change,
+.remove-btn {
+  background: var(--walnut);
+  border: none;
+  color: white;
+  padding: 0.4rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-change:hover,
+.remove-btn:hover {
+  background: var(--light-brown);
+  color: #000;
+}
+
+/* Summary box */
+.summary-box {
+  background:  var(--pickled-bean);
+  border-radius: 18px;
+  padding: 1.5rem;
+}
+
+/* Summary rows */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+  color: #d2b48c;
+}
+
+.summary-row.saving {
+  color: #9aff9a;
+}
+
+/* Coupon input + apply button */
+.coupon-input input {
+  border-radius: 12px 0 0 12px;
+}
+
+.btn-apply {
+  background: #d2b48c;
+  color: white;
+  border-radius: 0 12px 12px 0;
+  padding: 0 1.2rem;
+}
+
+/* Gift & shipping boxes */
+.gift-box,
+.shipping-box {
+  background: var(--light-brown);
+  padding: 0.5rem;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+}
+
+/* Checkout button */
+.btn-checkout {
+  background: #d2b48c;
+  color: #000;
+  padding: 0.8rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: 0.2s;
+  margin-top: 1rem;
+}
+
+.btn-checkout:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-checkout:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .cart-item {
+    width: 48%; 
+  }
+}
+
+@media (max-width: 480px) {
+  .cart-item {
+    width: 100%; 
+  }
+}

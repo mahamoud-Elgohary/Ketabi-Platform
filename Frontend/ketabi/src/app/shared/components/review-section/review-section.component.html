@@ -1,0 +1,95 @@
+<div class="review-section">
+    <h3 class="section-title">Reviews</h3>
+
+    <!-- Reviews List -->
+    <div class="reviews-container">
+        <div *ngIf="loading" class="loading-message">
+            Loading reviews...
+        </div>
+
+        <div *ngIf="!loading && reviews.length === 0" class="no-reviews">
+            <p>No reviews yet.</p>
+        </div>
+
+        <div *ngIf="!loading && reviews.length > 0" class="reviews-list">
+            <div *ngFor="let review of reviews" class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <span class="reviewer-name">{{ review.user?.name || 'Anonymous' }}</span>
+                        <span class="review-date">{{ formatDate(review.createdAt) }}</span>
+                    </div>
+                    <div class="rating-display">
+                        <span class="rating-stars">
+                            <span *ngFor="let star of getStars(review.rating)" [class.filled]="star <= review.rating"
+                                class="star">★</span>
+                        </span>
+                        <span class="rating-number">({{ review.rating }}/5)</span>
+                    </div>
+                </div>
+                <div *ngIf="review.title" class="review-title">
+                    <strong>{{ review.title }}</strong>
+                </div>
+                <div *ngIf="review.body" class="review-body">
+                    {{ review.body }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Form -->
+    <div class="review-form-container">
+        <h4 class="form-title">Write a Review</h4>
+
+        <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="review-form">
+            <!-- Rating -->
+            <div class="form-group">
+                <label for="rating" class="form-label">Rating *</label>
+                <select id="rating" formControlName="rating" class="form-control">
+                    <option [value]="5">5 - Excellent</option>
+                    <option [value]="4">4 - Very Good</option>
+                    <option [value]="3">3 - Good</option>
+                    <option [value]="2">2 - Fair</option>
+                    <option [value]="1">1 - Poor</option>
+                </select>
+                <div *ngIf="reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched"
+                    class="error-message">
+                    Rating is required
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="form-group">
+                <label for="title" class="form-label">Title (optional)</label>
+                <input type="text" id="title" formControlName="title" class="form-control"
+                    placeholder="Give your review a title" maxlength="120">
+                <div *ngIf="reviewForm.get('title')?.invalid && reviewForm.get('title')?.touched" class="error-message">
+                    Title must be 120 characters or less
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="form-group">
+                <label for="body" class="form-label">Review (optional)</label>
+                <textarea id="body" formControlName="body" class="form-control textarea" rows="5"
+                    placeholder="Share your thoughts about this book..." maxlength="5000"></textarea>
+                <div *ngIf="reviewForm.get('body')?.invalid && reviewForm.get('body')?.touched" class="error-message">
+                    Review must be 5000 characters or less
+                </div>
+            </div>
+
+            <!-- Error/Success Messages -->
+            <div *ngIf="error" class="alert alert-error">
+                {{ error }}
+            </div>
+            <div *ngIf="success" class="alert alert-success">
+                {{ success }}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn" [disabled]="reviewForm.invalid || submitting">
+                <span *ngIf="!submitting">Submit Review</span>
+                <span *ngIf="submitting">Submitting...</span>
+            </button>
+        </form>
+    </div>
+</div>
