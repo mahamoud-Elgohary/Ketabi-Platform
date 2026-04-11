@@ -135,8 +135,7 @@ export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy, 
 
   // Handle social user from auth state
   private handleSocialUser(user: SocialUser) {
-    const provider = user.provider.toLowerCase() as 'google' | 'facebook';
-
+    const provider = (user.provider ?? '').toLowerCase() as 'google' | 'facebook';
     const socialData: SocialLoginData = {
       provider: provider,
       token: user.idToken || user.authToken || '',

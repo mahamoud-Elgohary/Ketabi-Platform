@@ -1,175 +1,196 @@
-# Ketabi Website Fullstack
+# Ketabi Platform
 
-Fullstack bookstore platform with:
-- **Backend:** Node.js + Express + MongoDB + Redis
-- **Frontend:** Angular
-- **Uploads:** Local filesystem storage (`/uploads`) for PDF files
+## Overview
 
-This project is configured to run fully on localhost without AWS dependencies.
+**Ketabi** is a production-style digital bookstore and publishing platform. It connects readers with books and publishers with catalog and order workflows: discovery, cart and checkout, orders, reviews, support tickets, coupons, and administrative tools for sales and refunds.
 
-## Project Structure
+The system is designed to behave like a real commercial product: structured APIs, persistent data, integrations for payments and notifications, and operational concerns such as logging, scheduled jobs, and API documentation.
 
-```text
-Ketabi_Website_Fullstack/
-├── Backend/
-│   ├── .env
-│   └── Ketabi_Website/        # Node.js API
-├── Frontend/
-│   └── ketabi/                # Angular app
-└── README.md
+**Business value:** it reduces friction for online book sales, gives publishers a channel to manage inventory and orders, and gives administrators visibility into commerce and customer support—all backed by a single coherent backend service.
+
+---
+
+## My Role
+
+**I was responsible for backend development only.** I did not build or own the client application; the repository includes a separate frontend (Angular) that consumes the APIs I designed and implemented.
+
+### Backend responsibilities
+
+| Area | Contribution |
+|------|----------------|
+| **API design** | RESTful modules under `/api/*`, consistent patterns for validation, responses, and errors |
+| **Data modeling** | MongoDB schemas and relationships for users, books, genres, carts, orders, publishers, reviews, tickets, coupons, and related entities |
+| **Authentication & authorization** | JWT-based auth with Redis-backed session/token metadata, email confirmation, optional 2FA flows, Google sign-in integration, and route protection middleware |
+| **Business logic** | Cart, checkout, orders, coupons, refunds, publisher flows, reviews, support tickets, and AI-assisted book discovery (chatbot) |
+| **Performance & reliability** | Redis for caching and token state, background cron jobs (e.g. carts, coupons, orders, user lifecycle), and structured error handling |
+| **Security & operations** | Helmet, CORS configuration, encryption for sensitive fields, centralized error handling, request logging (Morgan/Winston), and Swagger/OpenAPI documentation |
+
+---
+
+## Backend Features
+
+- **Authentication** — Registration, login, refresh tokens, email verification, Google OAuth, JWT access tokens validated against Redis, device/session awareness where implemented  
+- **Authorization** — Protected routes via middleware; role-aware flows for users, publishers, and administrators  
+- **CRUD & domain APIs** — Books, genres, publishers, cart, orders, user profiles, reviews, tickets, coupons, admin sales/refunds  
+- **Validation & errors** — Input validation (e.g. Joi), consistent HTTP status codes, centralized `errorHandler` and `AppError` pattern  
+- **Payments & webhooks** — Stripe and Paymob integration patterns (configuration-driven)  
+- **Real-time** — Socket.IO server initialization for live features  
+- **Scalable structure** — Modular routes, controllers, models, middlewares, jobs, and utilities  
+- **API documentation** — Swagger UI at `/api-docs` (OpenAPI 3)  
+- **Observability** — Structured logging and rotating log files in development/production modes  
+
+---
+
+## Tech Stack
+
+### Backend (primary)
+
+| Technology | Purpose |
+|------------|---------|
+| **Node.js** | Runtime |
+| **Express 5** | HTTP server and routing |
+| **MongoDB + Mongoose** | Primary datastore and ODM |
+| **Redis** | Sessions / token metadata and caching-related usage |
+| **JWT (jsonwebtoken)** | Access and refresh token issuance and verification |
+| **Joi** | Request validation |
+| **Helmet** | Security-related HTTP headers |
+| **express-session + connect-redis** | Session store |
+| **Socket.IO** | WebSocket layer |
+| **node-cron** | Scheduled maintenance and business jobs |
+| **Multer** | Multipart / file uploads |
+| **Stripe / Paymob** | Payment providers (env-configured) |
+| **Nodemailer / Twilio** | Email and SMS (where configured) |
+| **Google Generative AI (Gemini)** | AI chatbot and book discovery |
+| **Swagger (swagger-jsdoc, swagger-ui-express)** | Interactive API docs |
+| **Winston / Morgan** | Logging |
+
+### Frontend (reference only)
+
+The **Angular** application under `Frontend/ketabi` is a separate consumer of this backend. **Frontend implementation is outside my scope of responsibility** for this project; it is listed here only so stakeholders understand the full system composition.
+
+---
+
+## API Overview
+
+Base path: **`/api`** (see `Backend/Ketabi_Website/app.js` for mounting).
+
+| Prefix | Module (high level) |
+|--------|---------------------|
+| `/api/auth` | Registration, login, tokens, email confirmation, OAuth-related flows |
+| `/api/genres` | Genre catalog |
+| `/api/books` | Book catalog, details, search-related endpoints |
+| `/api/publishers` | Publisher-facing book and order operations |
+| `/api/cart` | Shopping cart |
+| `/api/orders` | Checkout and order lifecycle |
+| `/api/users` | User profile and account-related operations |
+| `/api/coupons` | Coupon validation and application |
+| `/api/tickets` | Support tickets |
+| `/api/reviews` | Product reviews |
+| `/api/admin/refunds` | Administrative refund handling |
+| `/api/admin/sales` | Sales reporting / admin sales |
+| `/api/chatbot` | AI-assisted queries over the catalog |
+| `/api/admin` | Administrative operations |
+
+**Interactive documentation:** after starting the server, open **`http://localhost:<PORT>/api-docs`** (default port `3000` unless overridden).
+
+---
+
+## Architecture / Structure
+
+Backend service root: **`Backend/Ketabi_Website/`**
+
+Typical layout:
+
+```
+Backend/Ketabi_Website/
+├── app.js                 # Express app bootstrap, middleware, route mounting
+├── index.js               # Entry: loads environment, starts bootstrap
+├── config/                # DB, session, Swagger, payment, S3, etc.
+├── routes/                # HTTP route definitions (thin layer)
+├── controllers/           # Request handling and orchestration
+├── models/                # Mongoose schemas (domain entities)
+├── middlewares/           # Auth, CORS, errors, logging, etc.
+├── jobs/                  # Cron / scheduled tasks
+├── socketIO/              # Real-time server setup
+├── chatbot/               # AI chatbot config, services, prompts
+├── utils/                 # JWT, email/SMS helpers, errors, async wrappers
+├── uploads/               # Local upload storage (created at runtime if missing)
+└── logs/                  # Application logs (when enabled)
 ```
 
-## Features
+Environment files are commonly loaded from **`Backend/.env`** when running from `Ketabi_Website` (see `index.js`).
 
-- User authentication with OTP flow
-- Books, categories, publishers, cart, orders, reviews
-- Real-time chat via Socket.IO
-- Local PDF upload and download support
-- Swagger API docs
+---
 
-## Prerequisites
+## Getting Started (Backend Only)
 
-- Node.js 18+ (Node 20/22 recommended)
-- npm
-- MongoDB Atlas or local MongoDB
-- Redis running locally (`redis://localhost:6379/0`)
+### Prerequisites
 
-## Environment Setup
+- **Node.js** (LTS recommended)  
+- **MongoDB** (connection string)  
+- **Redis** (URL reachable from the app)  
 
-Use `Backend/.env` (already expected by the backend app).
-
-Minimum important keys:
-
-```env
-MONGO_URI=your_mongodb_connection_string
-PORT=3000
-REDIS_URL=redis://localhost:6379/0
-SESSION_SECRET=your_session_secret
-BACKEND_BASE_URL=http://localhost:3000
-NODE_ENV=development
-```
-
-Optional keys for advanced features:
-- Stripe, Google, Facebook, Telegram, Gemini keys
-
-> Note: Stripe webhook/refund runtime paths may be disabled in local mode depending on current code changes for development stability.
-
-## Installation
-
-### Backend
+### Installation
 
 ```bash
 cd Backend/Ketabi_Website
 npm install
 ```
 
-### Frontend
+### Environment variables
 
-```bash
-cd Frontend/ketabi
-npm install
-```
+Create **`Backend/.env`** (recommended) or copy and edit **`Backend/Ketabi_Website/.env.example`** and align variable names with what the codebase expects.
 
-## Running Locally
+git **Commonly required (non-exhaustive):**
 
-### 1) Start Redis
+| Variable | Purpose |
+|----------|---------|
+| `MONGO_URI` | MongoDB connection string |
+| `REDIS_URL` | Redis connection URL |
+| `PORT` | HTTP port (default `3000`) |
+| `SESSION_SECRET` | Express session secret |
+| `JWT_SECRET_ACCESS_KEY` / `JWT_SECRET_REFRESH_KEY` | JWT signing secrets |
+| `JWT_ACCESS_EXPIRES_IN` / `JWT_REFRESH_EXPIRES_IN` (and optional `*_SECONDS`) | Token lifetimes |
+| `CLIENT_URL` | Allowed CORS origin for the web client |
+| `ENCRYPTION_KEY` | Sensitive field encryption |
+| `APP_EMAIL` / `APP_PASSWORD` | Outbound email (Nodemailer) |
+| `GOOGLE_CLIENT_ID` | Google OAuth |
+| `GEMINI_API_KEY` | Chatbot / AI features |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Stripe (when used) |
+| `PAYMOB_*` | Paymob configuration (when used) |
+| `NODE_ENV` | `development` / `production` |
+| `BACKEND_BASE_URL` | Absolute URLs for assets and links |
 
-If not already running:
+> **Security:** never commit real secrets. Use a private `.env` and rotate keys for production.
 
-```bash
-redis-server
-```
-
-### 2) Start Backend
+### Run the server
 
 ```bash
 cd Backend/Ketabi_Website
-npm run dev
+npm run dev    # nodemon (development)
+# or
+npm start      # node index.js
 ```
 
-Expected:
-- Server on `http://localhost:3000`
-- Swagger docs on `http://localhost:3000/api-docs`
+Confirm MongoDB and Redis are running and reachable before starting.
 
-### 3) Start Frontend
+---
 
-```bash
-cd Frontend/ketabi
-ng serve
-```
+## Use Cases
 
-Open: `http://localhost:4200`
+- **Readers** — Browse books, manage cart and orders, leave reviews, open support tickets, apply coupons  
+- **Publishers** — Manage catalog and publisher-specific order flows via dedicated APIs  
+- **Administrators** — Oversight of refunds, sales, and platform-level operations  
+- **Product / engineering teams** — Integrate mobile or web clients against documented REST endpoints  
 
-## API and Proxy Configuration
+---
 
-Frontend uses relative API base (`/api`) and Angular proxy configuration:
-- `Frontend/ketabi/proxy.conf.json`
-- `Frontend/ketabi/angular.json` (`serve.options.proxyConfig`)
+## Why This Project Is Strong (Backend Perspective)
 
-Proxy routes:
-- `/api` -> `http://localhost:3000`
-- `/socket.io` -> `http://localhost:3000` (WebSocket enabled)
-- `/uploads` -> `http://localhost:3000`
+- **Clear separation of concerns** — Routes, controllers, models, and middleware keep the codebase maintainable as features grow  
+- **Security-minded defaults** — Helmet, CORS allowlisting, JWT validation with Redis-backed token state, and encryption for sensitive user data  
+- **Operational maturity** — Centralized errors, logging, scheduled jobs, and optional payment webhooks mirror production systems  
+- **Discoverable APIs** — Swagger reduces onboarding time for frontend, mobile, or partner integrations  
+- **Extensible domain** — Commerce (cart, orders, coupons), content (books, genres), engagement (reviews, chatbot), and support (tickets) in one service boundary  
 
-## File Uploads (Local Storage)
-
-AWS S3 upload flow has been replaced by local storage:
-- Files are saved under backend `uploads/`
-- Static serving is enabled in backend app:
-  - `app.use('/uploads', express.static('uploads'));`
-
-When a file is uploaded, API stores:
-- file key/path
-- public URL (local)
-- metadata (name, mimeType, size, uploadedAt)
-
-## Key Endpoints (Examples)
-
-- Auth:
-  - `POST /api/auth/login`
-  - `POST /api/auth/confirm-login`
-- Books:
-  - `POST /api/books/Create-Book` (PDF upload)
-  - `GET /api/books/Download-Book/:id`
-- Docs:
-  - `GET /api-docs`
-
-## Troubleshooting
-
-### Frontend says “Too many attempts”
-- Rate limiters may still be active in your local branch; disable auth/api limiter middleware in backend for local testing.
-
-### OTP errors (`confirm-login`)
-- Expired OTP: login again to generate a new OTP.
-- Ensure browser preserves session cookie between `/login` and `/confirm-login`.
-
-### MongoDB not connecting
-- Verify `MONGO_URI` in `Backend/.env`.
-- Check Atlas network access / credentials.
-
-### Redis connection error
-- Start Redis service.
-- Verify `REDIS_URL` matches your local setup.
-
-### Port conflicts
-- Backend default: `3000`
-- Frontend default: `4200`
-- Stop existing processes or use a different port.
-
-## Development Notes
-
-- Backend reads env from `Backend/.env`.
-- Keep sensitive secrets out of git.
-- Use `npm run dev` for backend hot reload.
-- Use `ng serve` for frontend live reload.
-
-## Suggested Next Improvements
-
-- Add automated tests for auth OTP flow and upload/download flow
-- Add role-based local feature flags for Stripe-dependent endpoints
-- Add Docker compose for Mongo + Redis + backend + frontend
-- Add CI checks (lint + test + build)
-
-## License
-
-Internal/Project license (update as needed).
+This README reflects the backend service as implemented in **`Backend/Ketabi_Website`**. For the full-stack picture, the Angular client lives under **`Frontend/ketabi`** and is maintained separately from my backend work.
